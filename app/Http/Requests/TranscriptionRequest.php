@@ -22,8 +22,8 @@ class TranscriptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'file', 'mimes:mp3,m4a', 'max:10240'],
-            'language' => ['required', 'string', 'max:255', 'in:en,es,ja,fr,pt'],
+            'audio' => ['required', 'file', 'mimes:mp3,m4a', 'max:10240'], // 10MB max
+            'language' => ['required', 'string', 'in:auto,en,es,ja,fr,pt'],
         ];
     }
 
@@ -35,14 +35,13 @@ class TranscriptionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'file.required' => 'The file is required.',
-            'file.file' => 'The file must be a file.',
-            'file.mimes' => 'The file must be a file of type: mp3, m4a.',
-            'file.max' => 'The file may not be greater than 10240 kilobytes.',
+            'audio.required' => 'The audio file is required.',
+            'audio.file' => 'The audio file must be a file.',
+            'audio.mimes' => 'The audio file must be a file of type: mp3, m4a.',
+            'audio.max' => 'The audio file may not be greater than 10MB.',
             'language.required' => 'The language is required.',
             'language.string' => 'The language must be a string.',
-            'language.max' => 'The language may not be greater than 255 characters.',
-            'language.in' => 'The selected language is invalid.',
+            'language.in' => 'The selected language is invalid or not supported.',
         ];
     }
 }

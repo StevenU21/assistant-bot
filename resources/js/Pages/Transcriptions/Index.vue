@@ -1,0 +1,133 @@
+<template>
+    <AuthenticatedLayout>
+        <Head title="Transcription" />
+
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Transcriptions
+            </h2>
+        </template>
+
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="flex justify-between mb-6">
+                    <Pagination class="hidden sm:block" :links="transcriptions.links"/>
+
+                    <Link :href="route('transcriptions.create')">
+                        <PrimaryButton>
+                            <i class="fas fa-plus mr-2"></i> Create transcription
+                        </PrimaryButton>
+                    </Link>
+                </div>
+                <!-- Tabla de géneros -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-max">
+                            <thead>
+                                <tr>
+                                    <th class="text-white p-4 text-left">
+                                        <i class="fas fa-id-badge mr-2"></i>ID
+                                    </th>
+                                    <th class="text-white p-4 text-left">
+                                        <i class="fas fa-font mr-2"></i>Title
+                                    </th>
+                                    <th class="text-white p-4 text-left">
+                                        <i class="fas fa-align-left mr-2"></i>Content
+                                    </th>
+                                    <th class="text-white p-4 text-left">
+                                        <i class="fas fa-calendar-alt mr-2"></i>Language
+                                    </th>
+                                    <th class="text-white p-4">
+                                        <i class="fas fa-cogs mr-2"></i>Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="!transcriptions || !transcriptions.data || transcriptions.data.length === 0">
+                                    <td
+                                        colspan="5"
+                                        class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
+                                        No transcriptions found.
+                                    </td>
+                                </tr>
+                                <tr v-else v-for="transcription in transcriptions.data" :key="transcription.id">
+                                    <td class="text-white px-4 py-2">
+                                        {{ transcription.id }}
+                                    </td>
+                                    <td class="text-white px-4 py-2">
+                                        {{ transcription.title }}
+                                    </td>
+                                    <td class="text-white px-4 py-2">
+                                        {{ truncate(transcription.content, 30) }}
+                                    </td>
+                                    <td class="text-white px-4 py-2">
+                                        {{ transcription.language }}
+                                    </td>
+                                    <td class="text-white px-4 py-2 space-x-2 text-center">
+                                        <div class="flex space-x-2 justify-center">
+                                            <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white">
+                                                <i class="fas fa-trash mr-2"></i>
+                                                Delete
+                                            </PrimaryButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="flex justify-left mb-6 mt-6">
+                    <Pagination :links="transcriptions.links" />
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
+
+<script setup>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Pagination from "@/Components/Pagination.vue";
+import { Head, Link, router } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
+
+defineProps({
+    transcriptions: {
+        type: Object,
+        default: () => ({
+            data: [],
+            links: []
+        })
+    },
+
+});const truncate = (text, length) => {
+    if (text.length <= length) {
+        return text;
+    }
+    return text.substring(0, length) + '...';
+};
+
+const deletetranscription = (slug) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route("transcriptions.destroy", slug), {
+                onSuccess: () => {
+                    Swal.fire("Deleted!", "transcription has been deleted.", "success");
+                },
+                onError: () => {
+                    Swal.fire("Failed!", "Failed to delete transcription.", "error");
+                },
+            });
+        }
+    });
+};
+</script>

@@ -13,7 +13,7 @@ class Transcription extends Model
         'title',
         'content',
         'language',
-        'file',
+        'audio',
         'slug',
     ];
 
@@ -24,6 +24,6 @@ class Transcription extends Model
 
     public function getFilePathAttribute(): string
     {
-        return asset('storage/' . $this->file);
+        return asset('storage/' . $this->audio);
     }
 }

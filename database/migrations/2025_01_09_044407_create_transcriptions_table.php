@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('title');
             $table->longText('content');
             $table->string('language');
-            $table->string('file');
+            $table->string('audio');
             $table->string('slug')->unique();
             $table->timestamps();
         });
