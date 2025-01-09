@@ -52,17 +52,29 @@ class TranscriptionController extends Controller
 
     public function download(Transcription $transcription)
     {
+        $pdf = $this->generatePdf($transcription);
+
+        $name = Str::slug($transcription->title, '-') . '.pdf';
+
+        return $pdf->download('Transcription to ' . $transcription->language . ' ' . $name);
+    }
+
+    public function show(Transcription $transcription)
+    {
+        $pdf = $this->generatePdf($transcription);
+
+        return $pdf->stream($transcription->title . '.pdf');
+    }
+
+    private function generatePdf(Transcription $transcription)
+    {
         $data = [
             'title' => $transcription->title,
             'content' => $transcription->content,
             'language' => $transcription->language,
         ];
 
-        $pdf = PDF::loadView('transcriptions.pdf', $data);
-
-        $name = Str::slug($transcription->title, '-') . '.pdf';
-
-        return $pdf->download('Transcription to ' . $transcription->language . ' ' . $name);
+        return PDF::loadView('transcriptions.pdf', $data);
     }
 
     public function destroy(Transcription $transcription): RedirectResponse

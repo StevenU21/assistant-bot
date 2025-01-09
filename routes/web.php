@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transcriptions/create', [TranscriptionController::class, 'create'])->name('transcriptions.create');
     Route::post('/transcriptions', [TranscriptionController::class, 'store'])->name('transcriptions.store');
     Route::get('/transcriptions/{transcription}/download', [TranscriptionController::class, 'download'])->name('transcriptions.download');
+    Route::get('/transcriptions/show/{transcription}', [TranscriptionController::class, 'show'])->name('transcriptions.show');
     Route::delete('/transcriptions/{transcription}', [TranscriptionController::class, 'destroy'])->name('transcriptions.destroy');
 });
 

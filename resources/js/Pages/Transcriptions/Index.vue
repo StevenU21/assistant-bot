@@ -65,6 +65,10 @@
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
                                         <div class="flex space-x-2 justify-center">
+                                            <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white">
+                                                <i class="fas fa-eye mr-2"></i>
+                                                View PDF
+                                            </PrimaryButton>
                                             <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white">
                                                 <i class="fas fa-download mr-2"></i>
                                                 Download PDF
@@ -138,5 +142,9 @@ const deletetranscription = (slug) => {
 
 const downloadTranscription = (slug) => {
     window.location.href = route('transcriptions.download', slug);
+};
+
+const viewTranscription = (slug) => {
+    window.open(route('transcriptions.show', slug), '_blank');
 };
 </script>
