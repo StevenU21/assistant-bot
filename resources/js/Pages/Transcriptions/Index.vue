@@ -65,6 +65,10 @@
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
                                         <div class="flex space-x-2 justify-center">
+                                            <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white">
+                                                <i class="fas fa-download mr-2"></i>
+                                                Download PDF
+                                            </PrimaryButton>
                                             <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white">
                                                 <i class="fas fa-trash mr-2"></i>
                                                 Delete
@@ -100,8 +104,9 @@ defineProps({
             links: []
         })
     },
+});
 
-});const truncate = (text, length) => {
+const truncate = (text, length) => {
     if (text.length <= length) {
         return text;
     }
@@ -129,5 +134,9 @@ const deletetranscription = (slug) => {
             });
         }
     });
+};
+
+const downloadTranscription = (slug) => {
+    window.location.href = route('transcriptions.download', slug);
 };
 </script>

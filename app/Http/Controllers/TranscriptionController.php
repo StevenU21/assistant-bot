@@ -2,14 +2,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TranscriptionRequest;
-use Illuminate\Http\Request;
 use App\Services\OpenAIService;
 use App\Models\Transcription;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class TranscriptionController extends Controller
 {
@@ -49,6 +48,21 @@ class TranscriptionController extends Controller
         ]);
 
         return redirect()->route('transcriptions.index')->with('success', 'Transcripción realizada correctamente.');
+    }
+
+    public function download(Transcription $transcription)
+    {
+        $data = [
+            'title' => $transcription->title,
+            'content' => $transcription->content,
+            'language' => $transcription->language,
+        ];
+
+        $pdf = PDF::loadView('transcriptions.pdf', $data);
+
+        $name = Str::slug($transcription->title, '-') . '.pdf';
+
+        return $pdf->download('Transcription to ' . $transcription->language . ' ' . $name);
     }
 
     public function destroy(Transcription $transcription): RedirectResponse
