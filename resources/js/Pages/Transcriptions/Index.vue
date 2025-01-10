@@ -61,6 +61,12 @@
                                         {{ truncate(transcription.content, 30) }}
                                     </td>
                                     <td class="text-white px-4 py-2">
+                                        <span v-if="transcription.language === 'en'">
+                                            🇺🇸
+                                        </span>
+                                        <span v-else-if="transcription.language === 'es'">
+                                            🇪🇸
+                                        </span>
                                         {{ transcription.language }}
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
