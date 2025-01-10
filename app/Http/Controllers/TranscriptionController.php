@@ -41,7 +41,7 @@ class TranscriptionController extends Controller
     public function store(TranscriptionRequest $request): RedirectResponse
     {
         $file = $request->file('audio');
-        $language = $request->input('language') === 'auto' ? null : $request->input('language');
+        $language = $request->input('language');
 
         $storedFilePath = $file->store('audios', 'public');
         $fileName = $file->getClientOriginalName();

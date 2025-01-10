@@ -22,14 +22,4 @@ class Transcription extends Model
     {
         return 'slug';
     }
-
-    // public function getFilePathAttribute(): string
-    // {
-    //     return asset('storage/' . $this->audio);
-    // }
-
-    public function getAudioUrlAttribute()
-    {
-        return Storage::url($this->audio);
-    }
 }
