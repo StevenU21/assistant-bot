@@ -12,7 +12,7 @@
         <div class="py-12">
             <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-8">
-                    <Form :submitAction="submit" buttonText="Generate Transcription" />
+                    <Form :submitAction="submit" buttonText="Generate Transcription" :errors="errors" />
                 </div>
             </div>
         </div>
@@ -31,15 +31,20 @@ export default {
         Head,
         Form,
     },
+    data() {
+        return {
+            errors: {},
+        };
+    },
     methods: {
         submit(formData) {
-            console.log("Form data submitted:", formData);
             this.$inertia.post(route("transcriptions.store"), formData, {
                 preserveScroll: true,
                 onSuccess: () => {
                     Swal.fire("Success!", "Transcription has been created.", "success");
                 },
                 onError: (errors) => {
+                    this.errors = errors;
                     console.error("Error submitting form:", errors);
                 },
             });

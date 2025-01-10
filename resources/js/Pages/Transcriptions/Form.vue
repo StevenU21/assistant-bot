@@ -71,6 +71,10 @@ export default {
         submitAction: {
             type: Function,
             required: true
+        },
+        errors: {
+            type: Object,
+            default: () => ({})
         }
     },
     setup(props) {
@@ -84,11 +88,7 @@ export default {
         };
 
         const submit = () => {
-            const formData = new FormData();
-            formData.append('audio', form.audio);
-            formData.append('language', form.language);
-
-            props.submitAction(formData);
+            props.submitAction(form);
         };
 
         return {
@@ -96,6 +96,15 @@ export default {
             handleFileChange,
             submit
         };
+    },
+    watch: {
+        errors: {
+            handler(newErrors) {
+                this.form.errors = newErrors;
+            },
+            immediate: true,
+            deep: true
+        }
     }
 };
 </script>
