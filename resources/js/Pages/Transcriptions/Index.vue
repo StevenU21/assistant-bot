@@ -71,6 +71,10 @@
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
                                         <div class="flex space-x-2 justify-center">
+                                            <PrimaryButton @click="toggleAudio(transcription)" class="bg-yellow-500 hover:bg-yellow-700 text-white">
+                                                <i :class="{'fas fa-play': !transcription.isPlaying, 'fas fa-pause': transcription.isPlaying}" class="mr-2"></i>
+                                                {{ transcription.isPlaying ? 'Pause' : 'Play' }} Audio
+                                            </PrimaryButton>
                                             <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white">
                                                 <i class="fas fa-eye mr-2"></i>
                                                 View PDF
@@ -82,10 +86,6 @@
                                             <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white">
                                                 <i class="fas fa-trash mr-2"></i>
                                                 Delete
-                                            </PrimaryButton>
-                                            <PrimaryButton @click="toggleAudio(transcription)" class="bg-yellow-500 hover:bg-yellow-700 text-white">
-                                                <i :class="{'fas fa-play': !transcription.isPlaying, 'fas fa-pause': transcription.isPlaying}" class="mr-2"></i>
-                                                {{ transcription.isPlaying ? 'Pause' : 'Play' }} Audio
                                             </PrimaryButton>
                                         </div>
                                     </td>
