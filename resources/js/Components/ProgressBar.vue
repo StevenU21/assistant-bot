@@ -18,21 +18,21 @@ import { ref } from "vue";
 // Estado de la barra de progreso
 const progress = ref(0);
 const isVisible = ref(false);
-const transitionTime = ref(700); // Tiempo de transición inicial
+const transitionTime = ref(1000); // Tiempo de transición inicial
 let intervalId = null;
 
 // Función para iniciar el progreso
 const start = () => {
     isVisible.value = true;
     progress.value = 0;
-    transitionTime.value = 700; // Animación suave
+    transitionTime.value = 1000; // Animación suave
     intervalId = setInterval(() => {
         if (progress.value < 100) {
             progress.value += 10; // Incremento simulado
         } else {
             clearInterval(intervalId);
         }
-    }, 700);
+    }, 1000);
 };
 
 // Función para detener el progreso
