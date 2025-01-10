@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Storage;
 
 class TranscriptionController extends Controller
 {
@@ -47,7 +48,7 @@ class TranscriptionController extends Controller
             'slug' => Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '-' . time()),
         ]);
 
-        return redirect()->route('transcriptions.index')->with('success', 'Transcripción realizada correctamente.');
+        return redirect()->route('transcriptions.index');
     }
 
     public function download(Transcription $transcription)
@@ -79,7 +80,10 @@ class TranscriptionController extends Controller
 
     public function destroy(Transcription $transcription): RedirectResponse
     {
+        Storage::disk('public')->delete($transcription->audio);
+
         $transcription->delete();
+
         return redirect()->route('transcriptions.index');
     }
 }
