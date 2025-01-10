@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\TranscriptionStarted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -38,6 +39,7 @@ class ProcessTranscription implements ShouldQueue
      */
     public function handle(OpenAIService $openAIService)
     {
+        event(new TranscriptionStarted($this->userId));
         // Obtener la ruta completa del archivo en el sistema
         $absoluteFilePath = Storage::disk('public')->path($this->filePath);
 
@@ -46,11 +48,10 @@ class ProcessTranscription implements ShouldQueue
 
         $contentMessage = "Transcripción de audio completada";
         $languajeMessage = "es";
-
-        sleep(5); // Simular un proceso de transcripción
+        sleep(6); // Simular un proceso de transcripción
 
         // Guardar en la base de datos
-        $transcription = Transcription::create([
+        Transcription::create([
             'title' => $this->fileName,
             'content' => $contentMessage,
             'language' => $languajeMessage,

@@ -35,7 +35,7 @@ class TranscriptionController extends Controller
         $fileName = $file->getClientOriginalName();
 
         // Despachar el evento de inicio de transcripción
-        event(new TranscriptionStarted(auth()->id()));
+        // event(new TranscriptionStarted(auth()->id()));
 
         // Despachar el trabajo en cola (usar ruta relativa)
         ProcessTranscription::dispatch($storedFilePath, $fileName, $language, auth()->id());
