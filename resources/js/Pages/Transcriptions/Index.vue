@@ -24,9 +24,6 @@
                             <thead>
                                 <tr>
                                     <th class="text-white p-4 text-left">
-                                        <i class="fas fa-id-badge mr-2"></i>ID
-                                    </th>
-                                    <th class="text-white p-4 text-left">
                                         <i class="fas fa-font mr-2"></i>Title
                                     </th>
                                     <th class="text-white p-4 text-left">
@@ -49,9 +46,6 @@
                                     </td>
                                 </tr>
                                 <tr v-else v-for="transcription in transcriptions.data" :key="transcription.id">
-                                    <td class="text-white px-4 py-2">
-                                        {{ transcription.id }}
-                                    </td>
                                     <td class="text-white px-4 py-2">
                                         {{ transcription.title }}
                                     </td>
