@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
@@ -8,6 +9,14 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
 
 const showingNavigationDropdown = ref(false);
+const page = usePage();
+
+onMounted(() => {
+    const userIdMeta = document.createElement('meta');
+    userIdMeta.name = 'user-id';
+    userIdMeta.content = page.props.auth.user.id;
+    document.head.appendChild(userIdMeta);
+});
 </script>
 
 <template>

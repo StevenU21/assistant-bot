@@ -13,11 +13,32 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
-window.Echo.channel('tasks')
-    .subscribed(() => {
-        console.log('Successfully subscribed to the tasks channel.');
-    })
-    .listen('TaskProgressUpdated', (e) => {
-        console.log('Task progress updated:', e.task);
-    });
-    
+document.addEventListener('DOMContentLoaded', () => {
+    const checkMetaTag = () => {
+        const userIdMeta = document.head.querySelector('meta[name="user-id"]');
+        if (userIdMeta) {
+            const userId = userIdMeta.content;
+
+            window.Echo.channel(`transcriptions.${userId}`)
+                .subscribed(() => {
+                    console.log(`Successfully subscribed to the transcriptions channel for user ${userId}.`);
+                })
+                .listen('TranscriptionStarted', (e) => {
+                    console.log('Transcription started:', e);
+                })
+                .listen('TranscriptionCompleted', (e) => {
+                    console.log('Transcription completed:', e);
+                });
+        } else {
+            console.error('Meta tag with name "user-id" not found.');
+        }
+    };
+
+    // Retry checking for the meta tag every 100ms until found
+    const intervalId = setInterval(() => {
+        if (document.head.querySelector('meta[name="user-id"]')) {
+            clearInterval(intervalId);
+            checkMetaTag();
+        }
+    }, 100);
+});

@@ -11,6 +11,7 @@ use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessTranscription;
+use App\Events\TranscriptionStarted;
 
 class TranscriptionController extends Controller
 {
@@ -40,6 +41,9 @@ class TranscriptionController extends Controller
 
         $storedFilePath = $file->store('audios', 'public');
         $fileName = $file->getClientOriginalName();
+
+        // Despachar el evento de inicio de transcripción
+        event(new TranscriptionStarted(auth()->id()));
 
         // Despachar el trabajo en cola (usar ruta relativa)
         ProcessTranscription::dispatch($storedFilePath, $fileName, $language);

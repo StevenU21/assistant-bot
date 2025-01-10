@@ -12,7 +12,6 @@ use App\Services\OpenAIService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-
 class ProcessTranscription implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -38,7 +37,7 @@ class ProcessTranscription implements ShouldQueue
     {
         // Obtener la ruta completa del archivo en el sistema
         $absoluteFilePath = Storage::disk('public')->path($this->filePath);
-
+        
         // Procesar la transcripción
         // $response = $openAIService->transcribe($absoluteFilePath, $this->language);
 
