@@ -9,14 +9,12 @@ use Illuminate\Queue\SerializesModels;
 class TranscriptionCompleted implements ShouldBroadcastNow
 {
     use SerializesModels;
-
-    public $transcriptionId;
     public $userId;
 
-    public function __construct($transcriptionId, $userId)
+    public function __construct( $userId)
     {
-        $this->transcriptionId = $transcriptionId;
         $this->userId = $userId;
+
     }
 
     public function broadcastOn()

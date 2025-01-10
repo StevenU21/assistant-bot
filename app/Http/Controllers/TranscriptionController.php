@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TranscriptionRequest;
-use App\Services\OpenAIService;
 use App\Models\Transcription;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
@@ -15,13 +14,6 @@ use App\Events\TranscriptionStarted;
 
 class TranscriptionController extends Controller
 {
-    protected $openAIService;
-
-    public function __construct(OpenAIService $openAIService)
-    {
-        $this->openAIService = $openAIService;
-    }
-
     public function index(): Response
     {
         $transcriptions = Transcription::latest()->paginate(10);
@@ -46,7 +38,7 @@ class TranscriptionController extends Controller
         event(new TranscriptionStarted(auth()->id()));
 
         // Despachar el trabajo en cola (usar ruta relativa)
-        ProcessTranscription::dispatch($storedFilePath, $fileName, $language);
+        ProcessTranscription::dispatch($storedFilePath, $fileName, $language, auth()->id());
 
         // Redirigir con un mensaje de éxito
         return redirect()->route('transcriptions.index');

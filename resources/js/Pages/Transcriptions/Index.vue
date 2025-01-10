@@ -99,6 +99,9 @@
         <Modal :show="showModal" @close="showModal = false">
             <Form :submitAction="submitForm" buttonText="Generate Transcription" :errors="errors" />
         </Modal>
+
+        <!-- Transcription Progress Animation -->
+        <TranscriptionProgress ref="transcriptionProgress" id="transcription-progress" />
     </AuthenticatedLayout>
 </template>
 
@@ -110,17 +113,18 @@ import AudioPlayer from "@/Components/AudioPlayer.vue";
 import DropdownMenu from "@/Components/DropdownMenu.vue";
 import Modal from "@/Components/Modal.vue";
 import Form from "@/Pages/Transcriptions/Form.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import TranscriptionProgress from "@/Components/TranscriptionProgress.vue";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
-import { ref } from 'vue';
+import { ref, onMounted } from "vue";
 
 defineProps({
     transcriptions: {
         type: Object,
         default: () => ({
             data: [],
-            links: []
-        })
+            links: [],
+        }),
     },
 });
 
@@ -131,7 +135,7 @@ const truncate = (text, length) => {
     if (text.length <= length) {
         return text;
     }
-    return text.substring(0, length) + '...';
+    return text.substring(0, length) + "...";
 };
 
 const deletetranscription = (slug) => {
@@ -147,10 +151,18 @@ const deletetranscription = (slug) => {
         if (result.isConfirmed) {
             router.delete(route("transcriptions.destroy", slug), {
                 onSuccess: () => {
-                    Swal.fire("Deleted!", "Transcription has been deleted.", "success");
+                    Swal.fire(
+                        "Deleted!",
+                        "Transcription has been deleted.",
+                        "success"
+                    );
                 },
                 onError: () => {
-                    Swal.fire("Failed!", "Failed to delete transcription.", "error");
+                    Swal.fire(
+                        "Failed!",
+                        "Failed to delete transcription.",
+                        "error"
+                    );
                 },
             });
         }
@@ -158,11 +170,11 @@ const deletetranscription = (slug) => {
 };
 
 const downloadTranscription = (slug) => {
-    window.location.href = route('transcriptions.download', slug);
+    window.location.href = route("transcriptions.download", slug);
 };
 
 const viewTranscription = (slug) => {
-    window.open(route('transcriptions.show', slug), '_blank');
+    window.open(route("transcriptions.show", slug), "_blank");
 };
 
 const submitForm = (formData) => {
@@ -170,10 +182,36 @@ const submitForm = (formData) => {
         preserveScroll: true,
         onSuccess: () => {
             showModal.value = false;
-            Swal.fire("Success!", "Transcription has been created.", "success");
         },
         onError: (newErrors) => {
             errors.value = newErrors;
+        },
+    });
+};
+
+const page = usePage();
+const transcriptionProgress = ref(null);
+
+onMounted(() => {
+    transcriptionProgress.value = ref(null);
+
+    // Suscribirse al canal de Echo
+    window.Echo.channel(`transcriptions.${page.props.auth.user.id}`)
+        .listen("TranscriptionStarted", () => {
+            transcriptionProgress.value.start();
+        })
+        .listen("TranscriptionCompleted", () => {
+            transcriptionProgress.value.stop();
+            updateTranscriptions(); // Llamar a la función para actualizar los datos
+        });
+});
+
+const updateTranscriptions = () => {
+    router.visit(route("transcriptions.index"), {
+        preserveScroll: true, // Mantener la posición de la página
+        only: ["transcriptions"], // Solo recargar las transcripciones,
+        onError: () => {
+            Swal.fire("Error!", "Failed to update transcriptions.", "error");
         },
     });
 };

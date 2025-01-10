@@ -8,9 +8,10 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Transcription;
-use App\Services\OpenAIService;
 use Illuminate\Support\Str;
+use App\Events\TranscriptionCompleted;
 use Illuminate\Support\Facades\Storage;
+use App\Services\OpenAIService;
 
 class ProcessTranscription implements ShouldQueue
 {
@@ -19,15 +20,17 @@ class ProcessTranscription implements ShouldQueue
     protected $filePath;
     protected $fileName;
     protected $language;
+    protected $userId;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($filePath, $fileName, $language)
+    public function __construct($filePath, $fileName, $language, $userId)
     {
         $this->filePath = $filePath;
         $this->fileName = $fileName;
         $this->language = $language;
+        $this->userId = $userId;
     }
 
     /**
@@ -37,16 +40,17 @@ class ProcessTranscription implements ShouldQueue
     {
         // Obtener la ruta completa del archivo en el sistema
         $absoluteFilePath = Storage::disk('public')->path($this->filePath);
-        
+
         // Procesar la transcripción
         // $response = $openAIService->transcribe($absoluteFilePath, $this->language);
 
         $contentMessage = "Transcripción de audio completada";
         $languajeMessage = "es";
 
-        sleep(3);
+        sleep(5); // Simular un proceso de transcripción
+
         // Guardar en la base de datos
-        Transcription::create([
+        $transcription = Transcription::create([
             'title' => $this->fileName,
             'content' => $contentMessage,
             'language' => $languajeMessage,
@@ -55,5 +59,8 @@ class ProcessTranscription implements ShouldQueue
             'audio' => $this->filePath, // Guardar la ruta relativa
             'slug' => Str::slug(pathinfo($this->fileName, PATHINFO_FILENAME) . '-' . time()),
         ]);
+
+        // Despachar evento del fin de la transcripción
+        event(new TranscriptionCompleted($this->userId));
     }
 }
