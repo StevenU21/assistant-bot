@@ -46,7 +46,18 @@
                                         {{ task.status }}
                                     </td>
                                     <td class="text-white px-4 py-2">
-                                        {{ task.progress }}%
+                                        <div class="relative pt-1">
+                                            <div class="flex mb-2 items-center justify-between">
+                                                <div>
+                                                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-white bg-blue-600">
+                                                        {{ task.progress }}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                                                <div :style="{ width: task.progress + '%' }" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="text-white px-4 py-2">
                                         {{ task.message }}
@@ -76,12 +87,16 @@ defineProps({
 // Real-time updates with Laravel Echo
 onMounted(() => {
     window.Echo.channel('tasks')
+        .subscribed(() => {
+            console.log('Successfully subscribed to the tasks channel.');
+        })
         .listen('TaskProgressUpdated', (e) => {
-            const taskIndex = tasks.findIndex(task => task.id === e.task.id);
+            console.log('Task progress updated:', e.task);
+            const taskIndex = tasks.value.findIndex(task => task.id === e.task.id);
             if (taskIndex !== -1) {
-                tasks[taskIndex] = e.task;
+                tasks.value[taskIndex] = e.task;
             } else {
-                tasks.push(e.task);
+                tasks.value.push(e.task);
             }
         });
 });
