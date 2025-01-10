@@ -25,11 +25,9 @@
                     v-model="form.language"
                     class="block w-full mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"
                 >
-                    <option value="auto">Auto Detect</option>
+                    <option value="" disabled selected>Select a Language</option>
                     <option value="en">English</option>
                     <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="pt">Portuguese</option>
                 </select>
             </div>
             <InputError :message="form.errors.language" class="mt-2 text-red-500" />
@@ -80,7 +78,7 @@ export default {
     setup(props) {
         const form = useForm({
             audio: null,
-            language: 'auto',
+            language: '',
         });
 
         const handleFileChange = (event) => {
