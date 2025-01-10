@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('transcriptions')->name('transcriptions.')->group(function () {
         Route::get('/', [TranscriptionController::class, 'index'])->name('index');
-        Route::get('/create', [TranscriptionController::class, 'create'])->name('create');
         Route::post('/', [TranscriptionController::class, 'store'])->name('store');
         Route::get('/{transcription}/download', [TranscriptionController::class, 'download'])->name('download');
         Route::get('/show/{transcription}', [TranscriptionController::class, 'show'])->name('show');

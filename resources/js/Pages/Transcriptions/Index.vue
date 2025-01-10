@@ -13,11 +13,9 @@
                 <div class="flex justify-between mb-6">
                     <Pagination class="hidden sm:block" :links="transcriptions.links"/>
 
-                    <Link :href="route('transcriptions.create')">
-                        <PrimaryButton>
-                            <i class="fas fa-plus mr-2"></i> Create transcription
-                        </PrimaryButton>
-                    </Link>
+                    <PrimaryButton @click="showModal = true">
+                        <i class="fas fa-plus mr-2"></i> Create transcription
+                    </PrimaryButton>
                 </div>
                 <!-- Tabla de géneros -->
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -102,6 +100,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for Form -->
+        <Modal :show="showModal" @close="showModal = false">
+            <Form :submitAction="submitForm" buttonText="Generate Transcription" :errors="errors" />
+        </Modal>
     </AuthenticatedLayout>
 </template>
 
@@ -111,6 +114,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";
 import AudioPlayer from "@/Components/AudioPlayer.vue";
 import DropdownMenu from "@/Components/DropdownMenu.vue";
+import Modal from "@/Components/Modal.vue";
+import Form from "@/Pages/Transcriptions/Form.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref } from 'vue';
@@ -124,6 +129,9 @@ defineProps({
         })
     },
 });
+
+const showModal = ref(false);
+const errors = ref({});
 
 const truncate = (text, length) => {
     if (text.length <= length) {
@@ -161,5 +169,18 @@ const downloadTranscription = (slug) => {
 
 const viewTranscription = (slug) => {
     window.open(route('transcriptions.show', slug), '_blank');
+};
+
+const submitForm = (formData) => {
+    router.post(route("transcriptions.store"), formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showModal.value = false;
+            Swal.fire("Success!", "Transcription has been created.", "success");
+        },
+        onError: (newErrors) => {
+            errors.value = newErrors;
+        },
+    });
 };
 </script>

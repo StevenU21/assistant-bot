@@ -41,13 +41,19 @@ class ProcessTranscription implements ShouldQueue
         $absoluteFilePath = Storage::disk('public')->path($this->filePath);
 
         // Procesar la transcripción
-        $response = $openAIService->transcribe($absoluteFilePath, $this->language);
+        // $response = $openAIService->transcribe($absoluteFilePath, $this->language);
 
+        $contentMessage = "Transcripción de audio completada";
+        $languajeMessage = "es";
+
+        sleep(3);
         // Guardar en la base de datos
         Transcription::create([
             'title' => $this->fileName,
-            'content' => $response['text'],
-            'language' => $this->language ?? $response['language'],
+            'content' => $contentMessage,
+            'language' => $languajeMessage,
+            // 'content' => $response['text'],
+            // 'language' => $this->language ?? $response['language'],
             'audio' => $this->filePath, // Guardar la ruta relativa
             'slug' => Str::slug(pathinfo($this->fileName, PATHINFO_FILENAME) . '-' . time()),
         ]);

@@ -33,11 +33,6 @@ class TranscriptionController extends Controller
         return Inertia::render('Transcriptions/Index', compact('transcriptions'));
     }
 
-    public function create(): Response
-    {
-        return Inertia::render('Transcriptions/Create');
-    }
-
     public function store(TranscriptionRequest $request): RedirectResponse
     {
         $file = $request->file('audio');
