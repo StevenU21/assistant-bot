@@ -21,16 +21,21 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+    });
 
-    Route::get('/transcriptions', [TranscriptionController::class, 'index'])->name('transcriptions.index');
-    Route::get('/transcriptions/create', [TranscriptionController::class, 'create'])->name('transcriptions.create');
-    Route::post('/transcriptions', [TranscriptionController::class, 'store'])->name('transcriptions.store');
-    Route::get('/transcriptions/{transcription}/download', [TranscriptionController::class, 'download'])->name('transcriptions.download');
-    Route::get('/transcriptions/show/{transcription}', [TranscriptionController::class, 'show'])->name('transcriptions.show');
-    Route::delete('/transcriptions/{transcription}', [TranscriptionController::class, 'destroy'])->name('transcriptions.destroy');
+    Route::prefix('transcriptions')->name('transcriptions.')->group(function () {
+        Route::get('/', [TranscriptionController::class, 'index'])->name('index');
+        Route::get('/create', [TranscriptionController::class, 'create'])->name('create');
+        Route::post('/', [TranscriptionController::class, 'store'])->name('store');
+        Route::get('/{transcription}/download', [TranscriptionController::class, 'download'])->name('download');
+        Route::get('/show/{transcription}', [TranscriptionController::class, 'show'])->name('show');
+        Route::delete('/{transcription}', [TranscriptionController::class, 'destroy'])->name('destroy');
+    });
 });
 
 require __DIR__ . '/auth.php';
