@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ProcessTranscription;
 
 class TranscriptionController extends Controller
 {
@@ -43,18 +44,14 @@ class TranscriptionController extends Controller
         $language = $request->input('language') === 'auto' ? null : $request->input('language');
 
         $storedFilePath = $file->store('audios', 'public');
-        $filePath = storage_path('app/public/' . $storedFilePath);
-        $response = $this->openAIService->transcribe($filePath, $language);
+        $fileName = $file->getClientOriginalName();
 
-        Transcription::create([
-            'title' => $file->getClientOriginalName(),
-            'content' => $response['text'],
-            'language' => $language ?? $response['language'],
-            'audio' => $storedFilePath,
-            'slug' => Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '-' . time()),
-        ]);
 
-        return redirect()->route('transcriptions.index');
+        // Despachar el trabajo en cola (usar ruta relativa)
+        ProcessTranscription::dispatch($storedFilePath, $fileName, $language);
+
+        // Redirigir con un mensaje de éxito
+        return redirect()->route('transcriptions.index')->with('status', 'Transcripción en proceso. Recibirá una notificación cuando esté completa.');
     }
 
     public function download(Transcription $transcription)
