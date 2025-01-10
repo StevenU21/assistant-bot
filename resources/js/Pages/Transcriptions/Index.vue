@@ -83,6 +83,10 @@
                                                 <i class="fas fa-trash mr-2"></i>
                                                 Delete
                                             </PrimaryButton>
+                                            <PrimaryButton @click="toggleAudio(transcription)" class="bg-yellow-500 hover:bg-yellow-700 text-white">
+                                                <i :class="{'fas fa-play': !transcription.isPlaying, 'fas fa-pause': transcription.isPlaying}" class="mr-2"></i>
+                                                {{ transcription.isPlaying ? 'Pause' : 'Play' }} Audio
+                                            </PrimaryButton>
                                         </div>
                                     </td>
                                 </tr>
@@ -105,6 +109,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
+import { ref } from 'vue';
 
 defineProps({
     transcriptions: {
@@ -152,5 +157,30 @@ const downloadTranscription = (slug) => {
 
 const viewTranscription = (slug) => {
     window.open(route('transcriptions.show', slug), '_blank');
+};
+
+const currentPlaying = ref(null);
+
+const toggleAudio = (transcription) => {
+    if (currentPlaying.value && currentPlaying.value !== transcription) {
+        currentPlaying.value.audio.pause();
+        currentPlaying.value.isPlaying = false;
+    }
+
+    if (!transcription.audio || !(transcription.audio instanceof Audio)) {
+        transcription.audio = new Audio(transcription.audioUrl);
+        transcription.audio.addEventListener('ended', () => {
+            transcription.isPlaying = false;
+        });
+    }
+
+    if (transcription.isPlaying) {
+        transcription.audio.pause();
+    } else {
+        transcription.audio.play();
+    }
+
+    transcription.isPlaying = !transcription.isPlaying;
+    currentPlaying.value = transcription.isPlaying ? transcription : null;
 };
 </script>

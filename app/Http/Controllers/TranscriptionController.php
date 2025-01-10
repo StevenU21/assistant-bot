@@ -23,6 +23,12 @@ class TranscriptionController extends Controller
     public function index(): Response
     {
         $transcriptions = Transcription::latest()->paginate(10);
+
+        $transcriptions->getCollection()->transform(function ($transcription) {
+            $transcription->audioUrl = asset('storage/' . $transcription->audio);
+            return $transcription;
+        });
+
         return Inertia::render('Transcriptions/Index', compact('transcriptions'));
     }
 

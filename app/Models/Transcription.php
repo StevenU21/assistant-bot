@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage;
 
 class Transcription extends Model
 {
@@ -22,8 +23,13 @@ class Transcription extends Model
         return 'slug';
     }
 
-    public function getFilePathAttribute(): string
+    // public function getFilePathAttribute(): string
+    // {
+    //     return asset('storage/' . $this->audio);
+    // }
+
+    public function getAudioUrlAttribute()
     {
-        return asset('storage/' . $this->audio);
+        return Storage::url($this->audio);
     }
 }
