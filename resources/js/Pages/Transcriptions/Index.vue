@@ -71,22 +71,24 @@
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
                                         <div class="flex space-x-2 justify-center">
-                                            <PrimaryButton @click="toggleAudio(transcription)" class="bg-yellow-500 hover:bg-yellow-700 text-white">
-                                                <i :class="{'fas fa-play': !transcription.isPlaying, 'fas fa-pause': transcription.isPlaying}" class="mr-2"></i>
-                                                {{ transcription.isPlaying ? 'Pause' : 'Play' }} Audio
-                                            </PrimaryButton>
-                                            <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white">
-                                                <i class="fas fa-eye mr-2"></i>
-                                                View PDF
-                                            </PrimaryButton>
-                                            <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white">
-                                                <i class="fas fa-download mr-2"></i>
-                                                Download PDF
-                                            </PrimaryButton>
-                                            <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white">
-                                                <i class="fas fa-trash mr-2"></i>
-                                                Delete
-                                            </PrimaryButton>
+                                            <AudioPlayer
+                                                :audioUrl="transcription.audioUrl"
+                                                v-model:isPlaying="transcription.isPlaying"
+                                            />
+                                            <DropdownMenu>
+                                                <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left">
+                                                    <i class="fas fa-eye mr-2"></i>
+                                                    View PDF
+                                                </PrimaryButton>
+                                                <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
+                                                    <i class="fas fa-download mr-2"></i>
+                                                    Download PDF
+                                                </PrimaryButton>
+                                                <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left">
+                                                    <i class="fas fa-trash mr-2"></i>
+                                                    Delete
+                                                </PrimaryButton>
+                                            </DropdownMenu>
                                         </div>
                                     </td>
                                 </tr>
@@ -107,6 +109,8 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";
+import AudioPlayer from "@/Components/AudioPlayer.vue";
+import DropdownMenu from "@/Components/DropdownMenu.vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref } from 'vue';
@@ -157,30 +161,5 @@ const downloadTranscription = (slug) => {
 
 const viewTranscription = (slug) => {
     window.open(route('transcriptions.show', slug), '_blank');
-};
-
-const currentPlaying = ref(null);
-
-const toggleAudio = (transcription) => {
-    if (currentPlaying.value && currentPlaying.value !== transcription) {
-        currentPlaying.value.audio.pause();
-        currentPlaying.value.isPlaying = false;
-    }
-
-    if (!transcription.audio || !(transcription.audio instanceof Audio)) {
-        transcription.audio = new Audio(transcription.audioUrl);
-        transcription.audio.addEventListener('ended', () => {
-            transcription.isPlaying = false;
-        });
-    }
-
-    if (transcription.isPlaying) {
-        transcription.audio.pause();
-    } else {
-        transcription.audio.play();
-    }
-
-    transcription.isPlaying = !transcription.isPlaying;
-    currentPlaying.value = transcription.isPlaying ? transcription : null;
 };
 </script>
