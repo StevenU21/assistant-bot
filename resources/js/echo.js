@@ -12,3 +12,12 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
+
+window.Echo.channel('tasks')
+    .subscribed(() => {
+        console.log('Successfully subscribed to the tasks channel.');
+    })
+    .listen('TaskProgressUpdated', (e) => {
+        console.log('Task progress updated:', e.task);
+    });
+    

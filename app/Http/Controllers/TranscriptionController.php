@@ -46,12 +46,11 @@ class TranscriptionController extends Controller
         $storedFilePath = $file->store('audios', 'public');
         $fileName = $file->getClientOriginalName();
 
-
         // Despachar el trabajo en cola (usar ruta relativa)
         ProcessTranscription::dispatch($storedFilePath, $fileName, $language);
 
         // Redirigir con un mensaje de éxito
-        return redirect()->route('tasks.index');
+        return redirect()->route('transcriptions.index');
     }
 
     public function download(Transcription $transcription)
