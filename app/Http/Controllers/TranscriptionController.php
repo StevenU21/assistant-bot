@@ -10,7 +10,6 @@ use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessTranscription;
-use App\Events\TranscriptionStarted;
 
 class TranscriptionController extends Controller
 {
