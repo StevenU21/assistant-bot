@@ -23,7 +23,7 @@ class TranscriptionRequest extends FormRequest
     {
         return [
             'audio' => ['required', 'file', 'mimes:mp3,m4a', 'max:10240'], // 10MB max
-            'language' => ['required', 'string', 'in:auto,en,es,ja,fr,pt'],
+            'language' => ['required', 'string', 'in:auto,en,es,fr,pt'],
         ];
     }
 

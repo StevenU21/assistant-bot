@@ -130,7 +130,7 @@ const deletetranscription = (slug) => {
         if (result.isConfirmed) {
             router.delete(route("transcriptions.destroy", slug), {
                 onSuccess: () => {
-                    Swal.fire("Deleted!", "transcription has been deleted.", "success");
+                    Swal.fire("Deleted!", "Transcription has been deleted.", "success");
                 },
                 onError: () => {
                     Swal.fire("Failed!", "Failed to delete transcription.", "error");
