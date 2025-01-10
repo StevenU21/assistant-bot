@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TranscriptionController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/transcriptions/{transcription}/download', [TranscriptionController::class, 'download'])->name('transcriptions.download');
     Route::get('/transcriptions/show/{transcription}', [TranscriptionController::class, 'show'])->name('transcriptions.show');
     Route::delete('/transcriptions/{transcription}', [TranscriptionController::class, 'destroy'])->name('transcriptions.destroy');
+
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 });
 
 require __DIR__ . '/auth.php';

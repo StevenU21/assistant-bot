@@ -51,7 +51,7 @@ class TranscriptionController extends Controller
         ProcessTranscription::dispatch($storedFilePath, $fileName, $language);
 
         // Redirigir con un mensaje de éxito
-        return redirect()->route('transcriptions.index')->with('status', 'Transcripción en proceso. Recibirá una notificación cuando esté completa.');
+        return redirect()->route('tasks.index');
     }
 
     public function download(Transcription $transcription)
