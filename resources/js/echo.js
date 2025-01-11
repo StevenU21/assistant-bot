@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .listen('TranscriptionCompleted', (e) => {
                     console.log('Transcription completed:', e);
+                })
+                .listen('SpeechAudioStarted', (e) => {
+                    console.log('Speech to Text Started:', e);
+                })
+                .listen('SpeechAudioCompleted', (e) => {
+                    console.log('Speech to Text Completed:', e);
                 });
         } else {
             console.error('Meta tag with name "user-id" not found.');

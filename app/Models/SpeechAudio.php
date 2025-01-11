@@ -8,14 +8,8 @@ class SpeechAudio extends Model
 {
     protected $table = 'speech_audio';
     protected $fillable = [
-        'title',
-        'content',
+        'text',
         'voice',
-        'slug'
     ];
 
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 }

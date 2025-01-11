@@ -4,13 +4,15 @@
             <InputLabel for="text" value="Text" class="text-white" />
             <div class="flex items-center mt-1">
                 <i class="fas fa-font text-white mr-2"></i>
-                <input
+                <textarea
                     id="text"
                     v-model="form.text"
-                    type="text"
+                    @input="limitText"
                     class="block w-full text-white bg-gray-700 border border-gray-600 rounded-md"
-                />
+                    rows="4"
+                ></textarea>
             </div>
+            <div class="text-right text-sm text-gray-400">{{ form.text.length }} / 500</div>
             <InputError :message="errors.text" class="mt-2 text-red-500" />
         </div>
 
@@ -113,6 +115,12 @@ const togglePlay = () => {
         audio.onended = () => {
             isPlaying.value = false;
         };
+    }
+};
+
+const limitText = () => {
+    if (form.value.text.length > 500) {
+        form.value.text = form.value.text.slice(0, 500);
     }
 };
 

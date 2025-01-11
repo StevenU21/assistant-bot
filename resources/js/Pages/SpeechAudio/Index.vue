@@ -32,15 +32,15 @@
                             <thead>
                                 <tr>
                                     <th class="text-white p-4 text-left">
-                                        <i class="fas fa-font mr-2"></i>Title
+                                        <i class="fas fa-font mr-2"></i>ID
                                     </th>
                                     <th class="text-white p-4 text-left">
                                         <i class="fas fa-align-left mr-2"></i
-                                        >Content
+                                        >Text
                                     </th>
                                     <th class="text-white p-4 text-left">
                                         <i class="fas fa-calendar-alt mr-2"></i
-                                        >Language
+                                        >Recorded At
                                     </th>
                                     <th class="text-white p-4">
                                         <i class="fas fa-cogs mr-2"></i>Actions
@@ -68,26 +68,17 @@
                                     :key="speechAudio.id"
                                 >
                                     <td class="text-white px-4 py-2">
-                                        {{ speechAudio.title }}
+                                        {{ speechAudio.id }}
                                     </td>
+
                                     <td class="text-white px-4 py-2">
-                                        {{ truncate(speechAudio.content, 30) }}
+                                        {{ truncate(speechAudio.text, 30) }}
                                     </td>
+
                                     <td class="text-white px-4 py-2">
-                                        <span
-                                            v-if="speechAudio.language === 'en'"
-                                        >
-                                            🇺🇸
-                                        </span>
-                                        <span
-                                            v-else-if="
-                                                speechAudio.language === 'es'
-                                            "
-                                        >
-                                            🇪🇸
-                                        </span>
-                                        {{ speechAudio.language }}
+                                        {{ speechAudio.created_at }}
                                     </td>
+
                                     <td
                                         class="text-white px-4 py-2 space-x-2 text-center"
                                     >
@@ -103,21 +94,8 @@
                                             <DropdownMenu>
                                                 <PrimaryButton
                                                     @click="
-                                                        viewSpeechAudio(
-                                                            speechAudio.slug
-                                                        )
-                                                    "
-                                                    class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-eye mr-2"
-                                                    ></i>
-                                                    View PDF
-                                                </PrimaryButton>
-                                                <PrimaryButton
-                                                    @click="
                                                         downloadSpeechAudio(
-                                                            speechAudio.slug
+                                                            speechAudio.id
                                                         )
                                                     "
                                                     class="bg-green-500 hover:bg-green-700 text-white w-full text-left"
@@ -125,12 +103,25 @@
                                                     <i
                                                         class="fas fa-download mr-2"
                                                     ></i>
-                                                    Download PDF
+                                                    Download Text
+                                                </PrimaryButton>
+                                                <PrimaryButton
+                                                    @click="
+                                                        downloadSpeechAudio(
+                                                            speechAudio.id
+                                                        )
+                                                    "
+                                                    class="bg-green-500 hover:bg-green-700 text-white w-full text-left"
+                                                >
+                                                    <i
+                                                        class="fas fa-download mr-2"
+                                                    ></i>
+                                                    Download Audio
                                                 </PrimaryButton>
                                                 <PrimaryButton
                                                     @click="
                                                         deleteSpeechAudio(
-                                                            speechAudio.slug
+                                                            speechAudio.id
                                                         )
                                                     "
                                                     class="bg-red-500 hover:bg-red-700 text-white w-full text-left"
@@ -203,7 +194,7 @@ const truncate = (text, length) => {
     return text.substring(0, length) + "...";
 };
 
-const deleteSpeechAudio = (slug) => {
+const deleteSpeechAudio = (id) => {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -214,7 +205,7 @@ const deleteSpeechAudio = (slug) => {
         confirmButtonText: "Yes, delete it!",
     }).then((result) => {
         if (result.isConfirmed) {
-            router.delete(route("speechAudios.destroy", slug), {
+            router.delete(route("speech_audios.destroy", id), {
                 onSuccess: () => {
                     Swal.fire(
                         "Deleted!",
@@ -234,16 +225,16 @@ const deleteSpeechAudio = (slug) => {
     });
 };
 
-const downloadSpeechAudio = (slug) => {
-    window.location.href = route("speechAudios.download", slug);
+const downloadSpeechAudio = (id) => {
+    window.location.href = route("speech_audios.download", id);
 };
 
-const viewSpeechAudio = (slug) => {
-    window.open(route("speechAudios.show", slug), "_blank");
-};
+// const viewSpeechAudio = (slug) => {
+//     window.open(route("speech_audios.show", slug), "_blank");
+// };
 
 const submitForm = (formData) => {
-    router.post(route("speechAudios.store"), formData, {
+    router.post(route("speech_audios.store"), formData, {
         preserveScroll: true,
         onSuccess: () => {
             showModal.value = false;
@@ -278,7 +269,7 @@ onMounted(() => {
         startProgress();
     }
 
-    window.Echo.channel(`speechAudios.${page.props.auth.user.id}`)
+    window.Echo.channel(`transcriptions.${page.props.auth.user.id}`)
         .listen("SpeechAudioStarted", () => {
             startProgress();
         })
@@ -289,7 +280,7 @@ onMounted(() => {
 });
 
 const updateSpeechAudios = () => {
-    router.visit(route("speechAudios.index"), {
+    router.visit(route("speech_audios.index"), {
         preserveScroll: true,
         only: ["speechAudios"],
         onError: () => {

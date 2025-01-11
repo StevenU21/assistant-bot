@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('speech_audio', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->text('content');
+            $table->text('text');
             $table->string('voice');
-            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
