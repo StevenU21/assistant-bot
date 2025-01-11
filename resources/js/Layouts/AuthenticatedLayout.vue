@@ -52,6 +52,13 @@ onMounted(() => {
                                         route().current('transcriptions.index')">
                                     Transcriptions
                                 </NavLink>
+
+                                <NavLink
+                                    :href="route('translations.index')"
+                                    :active="
+                                        route().current('translations.index')">
+                                    Translations
+                                </NavLink>
                             </div>
                         </div>
 

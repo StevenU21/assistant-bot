@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TranscriptionController;
+use App\Http\Controllers\TranslationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('translations')->name('translations.')->group(function () {
-        Route::get('/', [TranscriptionController::class, 'index'])->name('index');
+        Route::get('/', [TranslationController::class, 'index'])->name('index');
     });
 });
 
