@@ -34,6 +34,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/show/{transcription}', [TranscriptionController::class, 'show'])->name('show');
         Route::delete('/{transcription}', [TranscriptionController::class, 'destroy'])->name('destroy');
     });
+
+    Route::prefix('translations')->name('translations.')->group(function () {
+        Route::get('/', [TranscriptionController::class, 'index'])->name('index');
+    });
 });
 
 require __DIR__ . '/auth.php';
