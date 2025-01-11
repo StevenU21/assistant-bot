@@ -12,7 +12,7 @@
                     rows="4"
                 ></textarea>
             </div>
-            <div class="text-right text-sm text-gray-400">{{ form.text.length }} / 500</div>
+            <div class="text-right text-sm text-gray-400">{{ form.text.length }} / 3000</div>
             <InputError :message="errors.text" class="mt-2 text-red-500" />
         </div>
 
@@ -119,8 +119,8 @@ const togglePlay = () => {
 };
 
 const limitText = () => {
-    if (form.value.text.length > 500) {
-        form.value.text = form.value.text.slice(0, 500);
+    if (form.value.text.length > 3000) {
+        form.value.text = form.value.text.slice(0, 3000);
     }
 };
 

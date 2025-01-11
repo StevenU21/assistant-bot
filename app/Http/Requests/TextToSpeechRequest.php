@@ -22,7 +22,7 @@ class TextToSpeechRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'text' => ['required', 'string', 'min:2', 'max:500'],
+            'text' => ['required', 'string', 'min:2', 'max:3000'],
             'voice' => ['required', 'string', 'in:alloy,ash,coral,echo,fable,onyx,nova,sage,shimmer'],
             'model' => ['required', 'string', 'in:tts-1,tts-1-hd'],
         ];
