@@ -56,8 +56,8 @@
                     class="block w-full mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"
                 >
                     <option value="" disabled selected>Select a Model</option>
-                    <option value="tts-1">TTS-1</option>
-                    <option value="tts-1-hd">TTS-1 HD</option>
+                    <option value="tts-1">TTS-1 (Recommended)</option>
+                    <option value="tts-1-hd">TTS-1 HD (Consume more Tokens)</option>
                 </select>
             </div>
             <InputError :message="errors.model" class="mt-2 text-red-500" />
