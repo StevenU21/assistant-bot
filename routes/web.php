@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SpeechAudioController;
 use App\Http\Controllers\TranscriptionController;
 use App\Http\Controllers\TranslationController;
 use Illuminate\Foundation\Application;
@@ -39,6 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::prefix('translations')->name('translations.')->group(function () {
         Route::get('/', [TranslationController::class, 'index'])->name('index');
         Route::post('/', [TranslationController::class, 'translate'])->name('translate');
+    });
+
+    Route::prefix('speech_audios')->name('speech_audios.')->group(function () {
+        Route::get('/', [SpeechAudioController::class, 'index'])->name('index');
+        Route::post('/', [SpeechAudioController::class, 'store'])->name('store');
+        Route::get('/{speechAudio}/download', [SpeechAudioController::class, 'download'])->name('download');
+        Route::delete('/{speechAudio}', [SpeechAudioController::class, 'destroy'])->name('destroy');
     });
 });
 

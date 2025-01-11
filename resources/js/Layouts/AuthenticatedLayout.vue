@@ -59,6 +59,13 @@ onMounted(() => {
                                         route().current('translations.index')">
                                     Translations
                                 </NavLink>
+
+                                <NavLink
+                                    :href="route('speech_audios.index')"
+                                    :active="
+                                        route().current('speech_audios.index')">
+                                    Speech_Audios
+                                </NavLink>
                             </div>
                         </div>
 
