@@ -20,16 +20,18 @@ class OpenAIService
         return $response;
     }
 
-    public function translate($text, $sourceLanguage, $targetLanguage): TranslationResponse
+    public function translate($text, $sourceLanguage, $targetLanguage)
     {
-        $response = OpenAI::text()->translate([
-            'model' => 'translation-1',
-            'input' => $text,
-            'source_language' => $sourceLanguage,
-            'target_language' => $targetLanguage,
+        $prompt = "Translate the following text from $sourceLanguage to $targetLanguage: \"$text\"";
+
+        $response = OpenAI::completions()->create([
+            'model' => 'gpt-4o-realtime',
+            'prompt' => $prompt,
+            'max_tokens' => 70,
+            'temperature' => 0.2,
         ]);
 
-        return $response;
+        return trim($response['choices'][0]['text']);
     }
 
     public function textToSpeech($text, $voice, $model = 'tts-1'): string
