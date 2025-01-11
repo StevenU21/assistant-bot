@@ -40,7 +40,7 @@ class OpenAIService
     public function textToSpeech($text, $voice, $model = 'tts-1'): string
     {
         $response = OpenAI::audio()->speech([
-            'model' => $model, // El modelo ahora se pasa como parámetro
+            'model' => $model,
             'input' => $text,
             'voice' => $voice,
         ]);
