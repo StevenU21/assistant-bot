@@ -4,8 +4,6 @@ namespace App\Services;
 
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Audio\TranscriptionResponse;
-use OpenAI\Responses\Audio\TranslationResponse;
-
 class OpenAIService
 {
     public function transcribe($filePath, $language): TranscriptionResponse
@@ -37,12 +35,13 @@ class OpenAIService
         return trim($response['choices'][0]['message']['content']);
     }
 
-    public function textToSpeech($text, $voice, $model = 'tts-1'): string
+    public function textToSpeech($text, $voice, $model = 'tts-1', $responseFormat = 'mp3')
     {
         $response = OpenAI::audio()->speech([
             'model' => $model,
             'input' => $text,
             'voice' => $voice,
+            'response_format' => $responseFormat,
         ]);
 
         return $response;
