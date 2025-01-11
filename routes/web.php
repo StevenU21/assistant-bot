@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('translations')->name('translations.')->group(function () {
         Route::get('/', [TranslationController::class, 'index'])->name('index');
+        Route::post('/', [TranslationController::class, 'translate'])->name('translate');
     });
 });
 
