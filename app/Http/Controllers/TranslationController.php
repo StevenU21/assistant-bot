@@ -7,8 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Services\OpenAIService;
-use Illuminate\Support\Facades\Auth;
-use App\Events\TranslationUpdated;
 
 class TranslationController extends Controller
 {
