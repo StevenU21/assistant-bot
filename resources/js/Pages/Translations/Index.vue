@@ -41,7 +41,7 @@
                                 {{ sourceText.length }} / 255
                             </div>
                         </div>
-                        <textarea v-model="translatedText" class="w-full md:w-1/2 p-4 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600" rows="10" placeholder="Translated text" readonly></textarea>
+                        <textarea v-model="translatedText" :class="{ 'blinking': isTranslating }" class="w-full md:w-1/2 p-4 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600" rows="10" placeholder="Translated text" readonly></textarea>
                     </div>
                     <div class="flex justify-end">
                         <button @click="translateText" class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none">
@@ -66,6 +66,7 @@ const targetLanguage = ref("es");
 const sourceText = ref("");
 const translatedText = ref("");
 const isSwapped = ref(false);
+const isTranslating = ref(false);
 
 const page = usePage();
 
@@ -83,6 +84,7 @@ const limitText = () => {
 };
 
 const translateText = () => {
+    isTranslating.value = true;
     axios.post("/translations", {
         text: sourceText.value,
         sourceLanguage: sourceLanguage.value,
@@ -101,6 +103,9 @@ const translateText = () => {
         } else {
             console.error("Error setting up the request:", error.message);
         }
+    })
+    .finally(() => {
+        isTranslating.value = false;
     });
 };
 </script>
@@ -108,5 +113,15 @@ const translateText = () => {
 <style scoped>
 .rotate-180 {
     transform: rotate(180deg);
+}
+
+.blinking {
+    animation: blinkingText 1.2s infinite;
+}
+
+@keyframes blinkingText {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 </style>

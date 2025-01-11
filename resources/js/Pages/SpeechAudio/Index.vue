@@ -72,11 +72,11 @@
                                     </td>
 
                                     <td class="text-white px-4 py-2">
-                                        {{ truncate(speechAudio.text, 30) }}
+                                        {{ truncate(speechAudio.text, 60) }}
                                     </td>
 
                                     <td class="text-white px-4 py-2">
-                                        {{ speechAudio.created_at }}
+                                        {{ format(new Date(speechAudio.created_at), 'dd/MM/yyyy HH:mm:ss') }}
                                     </td>
 
                                     <td
@@ -172,6 +172,7 @@ import ProgressBar from "@/Components/ProgressBar.vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, onMounted, watch } from "vue";
+import { format } from 'date-fns';
 
 defineProps({
     speechAudios: {
