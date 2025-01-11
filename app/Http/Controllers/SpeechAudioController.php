@@ -5,22 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TextToSpeechRequest;
 use App\Jobs\ProcessSpeechAudio;
 use App\Models\SpeechAudio;
-use App\Services\OpenAIService;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class SpeechAudioController extends Controller
 {
-    protected $OpenAIService;
-
-    public function __construct(OpenAIService $OpenAIService)
-    {
-        $this->OpenAIService = $OpenAIService;
-    }
-
     public function index(): Response
     {
         $speechAudios = SpeechAudio::latest()->paginate(10);
