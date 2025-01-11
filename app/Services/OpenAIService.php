@@ -46,4 +46,28 @@ class OpenAIService
 
         return $response;
     }
+
+    public function textToImage($text, $style, $size, $responseFormat = 'url')
+    {
+        $styleDescriptions = [
+            'realistic' => 'with photorealistic details and natural lighting',
+            'anime' => 'with vibrant colors, anime-style shading, and expressive characters',
+            'cartoon' => 'with bold lines, simple shapes, and bright colors',
+            'futuristic' => 'featuring advanced technology and a sci-fi atmosphere',
+            'abstract' => 'with surreal and abstract forms, blending colors and shapes uniquely',
+        ];
+
+        $styleDescription = $styleDescriptions[$style] ?? 'in an artistic style';
+        
+        $enhancedPrompt = "{$text} {$styleDescription}.";
+
+        $response = OpenAI::image()->create([
+            'model' => 'dall-e-3',
+            'prompt' => $enhancedPrompt,
+            'size' => $size,
+            'response_format' => $responseFormat,
+        ]);
+
+        return $response['data'][0]['url'];
+    }
 }
