@@ -1,67 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Proyecto Laravel con Inertia.js y Vue.js para Consumir la API de OpenAI
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## ✨ Descripción
+Este proyecto es una aplicación web desarrollada con Laravel 11 y Vue.js utilizando Inertia.js como puente entre el frontend y el backend. Su objetivo principal es consumir los servicios de la API de OpenAI, permitiendo a los usuarios acceder a funcionalidades avanzadas como:
 
-## About Laravel
+- **Transcripción de audio a texto** (con reproductor de audio integrado).
+- **Traducción de textos**.
+- **Conversión de texto a voz**.
+- **Generación de imágenes basadas en texto**.
+- **Chatbot interactivo** impulsado por la API de OpenAI.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Características clave:
+- **Uso de Jobs**: Para manejar tareas de larga duración y mantener el rendimiento de la aplicación.
+- **Broadcasting con Laravel Reverb**: Para actualizaciones en tiempo real.
+- **Integración de DomPDF**: Exporta las transcripciones en formato PDF.
+- **Frontend moderno con Inertia.js y Vue.js**: Experiencia fluida y reactiva.
+- **Reproductor de audio**: Permite escuchar las transcripciones generadas.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🔧 Requisitos del sistema
+- **PHP**: Versión 8.2 o superior.
+- **Composer**: Gestor de dependencias PHP.
+- **Node.js**: Versión 18 o superior.
+- **NPM**: Versión 8 o superior.
+- **MySQL o PostgreSQL**: Para la base de datos.
+- **Cuenta en OpenAI**: Debes generar tu propia API Key para usar los servicios.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📝 Instalación
+Sigue estos pasos para configurar y ejecutar el proyecto:
 
-## Learning Laravel
+### 1. Clonar el repositorio
+```bash
+ git clone https://github.com/StevenU21/assistant-bot.git
+```
+```bash
+ cd assistan-bot && code .
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Instalar dependencias de PHP
+```bash
+composer install
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. Instalar dependencias de Node.js
+```bash
+npm install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Configurar el archivo `.env`
+Copia el archivo de ejemplo y personalízalo:
+```bash
+cp .env.example .env
+```
+- Configura los detalles de conexión a la base de datos.
+- Agrega tu clave API de OpenAI:
+  ```env
+  OPENAI_API_KEY=tu_api_key_aqui
+  ```
 
-## Laravel Sponsors
+### 5. Generar la clave de aplicación y migrar la base de datos
+```bash
+php artisan key:generate
+php artisan migrate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. Construir los assets del frontend
+```bash
+npm run dev
+```
 
-### Premium Partners
+### 7. Iniciar el servidor de desarrollo y servicios requeridos
+Ejecuta los siguientes comandos en terminales separadas:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1. Servidor de Laravel:
+   ```bash
+   php artisan serve
+   ```
 
-## Contributing
+2. Servidor de Vite:
+   ```bash
+   npm run dev
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Reverb para broadcasting:
+   ```bash
+   php artisan reverb:start
+   ```
 
-## Code of Conduct
+4. Trabajos en segundo plano:
+   ```bash
+   php artisan queue:work
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 8. Acceso a la aplicación
+Abre tu navegador y accede a la aplicación en:
+```
+http://localhost:8000
+```
 
-## Security Vulnerabilities
+## 🎨 Funcionalidades
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Transcripción de Audio
+Sube archivos de audio y genera transcripciones precisas con un reproductor para escuchar el resultado.
 
-## License
+### Traducción
+Traduce textos a múltiples idiomas utilizando los modelos avanzados de OpenAI.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# assistant-bot" 
+### Texto a Voz
+Convierte texto en audio con voces naturales y personalizables.
+
+### Generación de Imágenes
+Crea imágenes únicas a partir de descripciones detalladas.
+
+### Chatbot
+Interactúa con un chatbot basado en IA para responder preguntas y realizar tareas personalizadas.
+
+## ⚙️ Tecnologías utilizadas
+- **Backend**: Laravel 11
+- **Frontend**: Vue.js con Inertia.js
+- **Broadcasting**: Laravel Reverb y Echo
+- **PDF**: DomPDF
+- **Cola de trabajos**: Laravel Queue
+
+## 📊 Recursos adicionales
+- [Documentación de Laravel](https://laravel.com/docs)
+- [Documentación de Vue.js](https://vuejs.org/)
+- [API de OpenAI](https://platform.openai.com/docs)
+
+---
