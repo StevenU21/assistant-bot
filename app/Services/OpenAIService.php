@@ -4,6 +4,7 @@ namespace App\Services;
 
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Audio\TranscriptionResponse;
+use OpenAI\Responses\Audio\TranslationResponse;
 
 class OpenAIService
 {
@@ -14,6 +15,18 @@ class OpenAIService
             'file' => fopen($filePath, 'r'),
             'language' => $language,
             'response_format' => 'verbose_json',
+        ]);
+
+        return $response;
+    }
+
+    public function translate($text, $sourceLanguage, $targetLanguage): TranslationResponse
+    {
+        $response = OpenAI::text()->translate([
+            'model' => 'translation-1',
+            'input' => $text,
+            'source_language' => $sourceLanguage,
+            'target_language' => $targetLanguage,
         ]);
 
         return $response;
