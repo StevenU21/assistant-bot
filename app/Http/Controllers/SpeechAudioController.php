@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\SpeechAudioStarted;
 use App\Http\Requests\TextToSpeechRequest;
 use App\Jobs\ProcessSpeechAudio;
 use App\Models\SpeechAudio;
@@ -11,6 +10,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class SpeechAudioController extends Controller
 {
@@ -47,11 +47,25 @@ class SpeechAudioController extends Controller
         return redirect()->route('speech_audios.index');
     }
 
-    public function download($id)
+    public function download_audio($id)
     {
         $speechAudio = SpeechAudio::findOrFail($id);
-        
+
         return Storage::disk('public')->download($speechAudio->voice);
+    }
+    public function download_text($id)
+    {
+        $speechAudio = SpeechAudio::findOrFail($id);
+
+        $data = [
+            'audio' => $speechAudio->audio,
+            'text' => $speechAudio->text,
+            'voice' => $speechAudio->voice,
+        ];
+
+        $pdf = PDF::loadView('speechAudio.pdf', $data);
+
+        return $pdf->download($speechAudio->id . '-' . 'speech-audio.pdf');
     }
 
     public function destroy($id)

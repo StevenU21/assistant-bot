@@ -94,7 +94,7 @@
                                             <DropdownMenu>
                                                 <PrimaryButton
                                                     @click="
-                                                        downloadSpeechAudio(
+                                                        downloadText(
                                                             speechAudio.id
                                                         )
                                                     "
@@ -226,12 +226,12 @@ const deleteSpeechAudio = (id) => {
 };
 
 const downloadSpeechAudio = (id) => {
-    window.location.href = route("speech_audios.download", id);
+    window.location.href = route("speech_audios.download_audio", id);
 };
 
-// const viewSpeechAudio = (slug) => {
-//     window.open(route("speech_audios.show", slug), "_blank");
-// };
+const downloadText = (id) => {
+    window.location.href = route("speech_audios.download_text", id);
+};
 
 const submitForm = (formData) => {
     router.post(route("speech_audios.store"), formData, {

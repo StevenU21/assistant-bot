@@ -45,7 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('speech_audios')->name('speech_audios.')->group(function () {
         Route::get('/', [SpeechAudioController::class, 'index'])->name('index');
         Route::post('/', [SpeechAudioController::class, 'store'])->name('store');
-        Route::get('/{id}/download', [SpeechAudioController::class, 'download'])->name('download');
+        Route::get('/{id}/download', [SpeechAudioController::class, 'download_audio'])->name('download_audio');
+        Route::get('/{id}/download_text', [SpeechAudioController::class, 'download_text'])->name('download_text');
         Route::delete('/{id}', [SpeechAudioController::class, 'destroy'])->name('destroy');
     });
 });
