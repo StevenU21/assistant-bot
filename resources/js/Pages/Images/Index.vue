@@ -56,10 +56,10 @@
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
                                         <div class="flex space-x-2 justify-center">
+                                            <PrimaryButton @click="openImageModal(image)" class="bg-blue-500 hover:bg-blue-700 text-white text-left">
+                                                <i class="fas fa-eye mr-2"></i> View
+                                            </PrimaryButton>
                                             <DropdownMenu>
-                                                <PrimaryButton @click="viewImage(image.id)" class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left">
-                                                    <i class="fas fa-eye mr-2"></i> View
-                                                </PrimaryButton>
                                                 <PrimaryButton @click="downloadImage(image.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
                                                     <i class="fas fa-download mr-2"></i> Download
                                                 </PrimaryButton>
@@ -84,6 +84,15 @@
         <!-- Modal for Form -->
         <Modal :show="showModal" @close="showModal = false">
             <Form :submitAction="submitForm" buttonText="Generate Image" :errors="errors" />
+        </Modal>
+
+        <!-- Modal for Viewing Image -->
+        <Modal :show="showImageModal" @close="showImageModal = false">
+            <template #default>
+                <div class="p-4">
+                    <img :src="selectedImage?.imageUrl" alt="Generated Image" class="w-full h-auto object-cover rounded-md" />
+                </div>
+            </template>
         </Modal>
     </AuthenticatedLayout>
 </template>
@@ -112,6 +121,8 @@ defineProps({
 });
 
 const showModal = ref(false);
+const showImageModal = ref(false);
+const selectedImage = ref(null);
 const errors = ref({});
 const isProgressing = ref(false);
 
@@ -149,8 +160,9 @@ const downloadImage = (id) => {
     window.location.href = route("images.download", id);
 };
 
-const viewImage = (id) => {
-    window.open(route("images.show", id), "_blank");
+const openImageModal = (image) => {
+    selectedImage.value = image;
+    showImageModal.value = true;
 };
 
 const submitForm = (formData) => {

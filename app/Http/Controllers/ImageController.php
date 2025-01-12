@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImageRequest;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Image;
@@ -31,7 +32,23 @@ class ImageController extends Controller
         $size = $request->validated()['size'];
 
         // Dispatch job
-        ProcessImage::dispatch($model, $prompt, $style, $size,$quality, auth()->id());
+        ProcessImage::dispatch($model, $prompt, $style, $size, $quality, auth()->id());
+
+        return redirect()->route('images.index');
+    }
+
+    public function download($id)
+    {
+        $image = Image::findOrFail($id);
+
+        return Storage::disk('public')->download($image->image_url);
+    }
+
+    public function destroy($id)
+    {
+        $image = Image::findOrFail($id);
+        Storage::disk('public')->delete($image->image_url);
+        $image->delete();
 
         return redirect()->route('images.index');
     }
