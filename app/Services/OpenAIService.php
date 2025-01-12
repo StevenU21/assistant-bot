@@ -47,7 +47,7 @@ class OpenAIService
         return $response;
     }
 
-    public function textToImage($prompt, $style, $size, $responseFormat = 'url')
+    public function textToImage($model = 'dall-e-2', $prompt, $style, $size, $quality = 'standard')
     {
         $styleDescriptions = [
             'realistic' => 'with photorealistic details and natural lighting',
@@ -61,13 +61,17 @@ class OpenAIService
 
         $enhancedPrompt = "{$prompt} {$styleDescription}.";
 
-        $response = OpenAI::image()->create([
-            'model' => 'dall-e-3',
+        $response = OpenAI::images()->create([
+            'model' => $model,
             'prompt' => $enhancedPrompt,
             'size' => $size,
-            'response_format' => $responseFormat,
+            'quality' => $quality,
+            'response_format' => 'url',
         ]);
 
-        return $response['data'][0]['url'];
+        return [
+            'url' => $response['data'][0]['url'],
+            'prompt' => $enhancedPrompt,
+        ];
     }
 }

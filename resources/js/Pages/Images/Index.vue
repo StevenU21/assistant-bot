@@ -28,10 +28,10 @@
                                         <i class="fas fa-image mr-2"></i>Prompt
                                     </th>
                                     <th class="text-white p-4 text-left">
-                                        <i class="fas fa-expand mr-2"></i>Image
+                                        <i class="fas fa-calendar-alt mr-2"></i>Generated At
                                     </th>
                                     <th class="text-white p-4 text-left">
-                                        <i class="fas fa-calendar-alt mr-2"></i>Generated At
+                                        <i class="fas fa-expand mr-2"></i>Image
                                     </th>
                                     <th class="text-white p-4">
                                         <i class="fas fa-cogs mr-2"></i>Actions
@@ -46,13 +46,13 @@
                                 </tr>
                                 <tr v-else v-for="image in images.data" :key="image.id">
                                     <td class="text-white px-4 py-2">
-                                        {{ truncate(image.prompt) }}
-                                    </td>
-                                    <td class="text-white px-4 py-2">
-                                        {{ image.imageUrl }}
+                                        {{ truncate(image.prompt, 40) }}
                                     </td>
                                     <td class="text-white px-4 py-2">
                                         {{ format(new Date(image.created_at), 'dd/MM/yyyy HH:mm:ss') }}
+                                    </td>
+                                    <td class="text-white px-4 py-2">
+                                        <img :src="image.imageUrl" alt="Generated Image" class="w-32 h-32 object-cover rounded-md" />
                                     </td>
                                     <td class="text-white px-4 py-2 space-x-2 text-center">
                                         <div class="flex space-x-2 justify-center">
@@ -189,7 +189,7 @@ onMounted(() => {
         startProgress();
     }
 
-    window.Echo.channel(`images.${page.props.auth.user.id}`)
+    window.Echo.channel(`transcriptions.${page.props.auth.user.id}`)
         .listen("ImageUploadStarted", () => {
             startProgress();
         })

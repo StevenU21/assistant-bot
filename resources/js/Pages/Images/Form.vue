@@ -24,14 +24,46 @@
                     class="block w-full mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"
                 >
                     <option value="" disabled selected>Select a Size</option>
-                    <option value="tiny">Tiny</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                    <option value="huge">Huge</option>
+                    <option value="1024x1024">Medium (1024x1024)</option>
+                    <option value="1024x1792">Large (1024x1792)</option>
+                    <option value="1792x1024">Huge (1792x1024)</option>
                 </select>
             </div>
             <InputError :message="errors.size" class="mt-2 text-red-500" />
+        </div>
+
+        <div>
+            <InputLabel for="model" value="Model" class="text-white" />
+            <div class="flex items-center mt-1">
+                <i class="fas fa-expand text-white mr-2"></i>
+                <select
+                    id="model"
+                    v-model="formData.model"
+                    class="block w-full mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"
+                >
+                    <option value="" disabled selected>Select Image IA Model</option>
+                    <option value="dall-e-2">DALL·E 2 (Basic Model Recomended)</option>
+                    <option value="dall-e-3">DALL·E 3 (Enhanced Model)</option>
+                </select>
+            </div>
+            <InputError :message="errors.model" class="mt-2 text-red-500" />
+        </div>
+
+        <div>
+            <InputLabel for="quality" value="Quality" class="text-white" />
+            <div class="flex items-center mt-1">
+                <i class="fas fa-expand text-white mr-2"></i>
+                <select
+                    id="quality"
+                    v-model="formData.quality"
+                    class="block w-full mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"
+                >
+                    <option value="" disabled selected>Select Image Quality</option>
+                    <option value="standard">Standard</option>
+                    <option value="hd">High Definition (Only for DALL·E 3)</option>
+                </select>
+            </div>
+            <InputError :message="errors.quality" class="mt-2 text-red-500" />
         </div>
 
         <div>
@@ -87,6 +119,8 @@ const formData = ref({
     prompt: '',
     size: '',
     style: '',
+    quality: '',
+    model: '',
 });
 
 const handleSubmit = () => {
@@ -94,6 +128,8 @@ const handleSubmit = () => {
     data.append('prompt', formData.value.prompt);
     data.append('size', formData.value.size);
     data.append('style', formData.value.style);
+    data.append('quality', formData.value.quality);
+    data.append('model', formData.value.model);
 
     props.submitAction(data);
 };

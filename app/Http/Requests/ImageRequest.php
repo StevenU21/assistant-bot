@@ -22,9 +22,11 @@ class ImageRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'model' => ['required', 'string', 'in:dall-e-2,dall-e-3'],
             'prompt' => ['required', 'string', 'min:12', 'max:150'],
             'style' => ['required', 'string', 'in:realistic,anime,cartoon,futuristic,abstract'],
-            'size' => ['required', 'string', 'in:tiny,small,medium,large,huge'],
+            'size' => ['required', 'string', 'in:256x256,512x512,1024x1024,1024x1792,1792x1024'],
+            'quality' => ['string', 'in:standard,hd'],
         ];
     }
 
@@ -46,6 +48,8 @@ class ImageRequest extends FormRequest
             'size.required' => 'The size field is required.',
             'size.string' => 'The size field must be a string.',
             'size.in' => 'The selected size is invalid.',
+            'quality.string' => 'The quality field must be a string.',
+            'quality.in' => 'The selected quality is invalid.',
         ];
     }
 }
