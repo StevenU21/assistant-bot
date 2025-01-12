@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SpeechAudioController;
 use App\Http\Controllers\TranscriptionController;
 use App\Http\Controllers\TranslationController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -48,6 +49,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/download', [SpeechAudioController::class, 'download_audio'])->name('download_audio');
         Route::get('/{id}/download_text', [SpeechAudioController::class, 'download_text'])->name('download_text');
         Route::delete('/{id}', [SpeechAudioController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('images')->name('images.')->group(function () {
+        Route::get('/', [ImageController::class, 'index'])->name('index');
+        Route::post('/', [ImageController::class, 'store'])->name('store');
+        Route::get('/{image}/download', [ImageController::class, 'download'])->name('download');
+        Route::get('/{image}', [ImageController::class, 'show'])->name('show');
+        Route::delete('/{image}', [ImageController::class, 'destroy'])->name('destroy');
     });
 });
 
