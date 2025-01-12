@@ -4,6 +4,7 @@ namespace App\Services;
 
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Audio\TranscriptionResponse;
+use OpenAI\Responses\Models\ListResponse;
 class OpenAIService
 {
     public function transcribe($filePath, $language): TranscriptionResponse
@@ -73,5 +74,32 @@ class OpenAIService
             'url' => $response['data'][0]['url'],
             'prompt' => $enhancedPrompt,
         ];
+    }
+
+    public function conversation($text, $model, $prompt, $temperature)
+    {
+        $messages = [
+            ['role' => 'system', 'content' => $prompt],
+            ['role' => 'user', 'content' => $text]
+        ];
+
+        $response = OpenAI::chat()->create([
+            'model' => $model,
+            'messages' => $messages,
+            'temperature' => $temperature,
+        ]);
+
+        return [
+            'bot_message' => $response['choices'][0]['message']['content'],
+            'input_tokens' => $response['usage']['prompt_tokens'],
+            'output_tokens' => $response['usage']['completion_tokens']
+        ];
+    }
+
+    public function getAIModels(): ListResponse
+    {
+        $response = OpenAI::models()->list();
+
+        return $response;
     }
 }

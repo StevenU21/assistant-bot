@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AssistantController;
+use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SpeechAudioController;
 use App\Http\Controllers\TranscriptionController;
@@ -56,6 +58,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [ImageController::class, 'store'])->name('store');
         Route::get('/{image}/download', [ImageController::class, 'download'])->name('download');
         Route::delete('/{image}', [ImageController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('chatbot')->name('chatbot.')->group(function () {
+        Route::get('/', [ChatBotController::class, 'index'])->name('index');
     });
 });
 

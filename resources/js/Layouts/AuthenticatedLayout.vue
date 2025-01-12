@@ -73,6 +73,13 @@ onMounted(() => {
                                         route().current('images.index')">
                                     Images
                                 </NavLink>
+
+                                <NavLink
+                                    :href="route('chatbot.index')"
+                                    :active="
+                                        route().current('chatbot.index')">
+                                    ChatBot
+                                </NavLink>
                             </div>
                         </div>
 
