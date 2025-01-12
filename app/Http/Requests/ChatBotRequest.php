@@ -25,7 +25,7 @@ class ChatBotRequest extends FormRequest
             'text' => ['required', 'string', 'min:4', 'max:600'],
             'model' => ['required', 'string', 'in:gpt-3.5-turbo,gpt-4o,gpt-4o-mini'],
             'prompt' => ['required', 'string', 'in:assistant,grammar_correction,sarcastic_response,code_explainer,simplify_text,code_interviewer,improve_code_efficiency,translator,psychologist'],
-            'temperature' => ['required', 'numeric', 'min:0', 'max:1'],
+            'temperature' => ['required', 'numeric', 'min:0', 'max:1.5'],
         ];
     }
 

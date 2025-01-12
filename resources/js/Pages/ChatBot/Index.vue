@@ -28,7 +28,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Temperature
                         </label>
-                        <input type="number" step="0.1" min="0" max="1" v-model="temperature"
+                        <input type="number" step="0.1" min="0" max="1.5" v-model="temperature"
                                class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700
                                       text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"/>
                     </div>
