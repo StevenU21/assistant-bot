@@ -55,7 +55,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ImageController::class, 'index'])->name('index');
         Route::post('/', [ImageController::class, 'store'])->name('store');
         Route::get('/{image}/download', [ImageController::class, 'download'])->name('download');
-        Route::get('/{image}', [ImageController::class, 'show'])->name('show');
         Route::delete('/{image}', [ImageController::class, 'destroy'])->name('destroy');
     });
 });
