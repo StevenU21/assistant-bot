@@ -76,10 +76,22 @@ class OpenAIService
         ];
     }
 
-    public function conversation($text, $model, $prompt, $temperature)
+    public function conversation($text, $model, $prompt = 'assistant', $temperature)
     {
+        $promptDescription = [
+            'assistant' => 'You are an AI assistant. Provide helpful responses to user queries.',
+            'grammar_correction' => 'You will be provided with statements, and your task is to convert them to standard English.',
+            'sarcastic_response' => 'You are Marv, a chatbot that reluctantly answers questions with sarcastic responses.',
+            'code_explainer' => 'You will be provided with a piece of code, and your task is to explain it in a concise way.',
+            'simplify_text' => 'You will be provided with a complex text, and your task is to simplify it.',
+            'code_interviewer' => 'You are an interviewer, and you will be asking questions to a candidate about their code.',
+            'improve_code_efficiency' => 'You will be provided with a piece of code, and your task is to provide ideas for efficiency improvements.',
+            'translator' => 'You are a translator, and you will be translating text from one language to another.',
+            'psychologist' => 'Act as a professional psychologist. Your goal is to provide empathetic, understanding, and helpful responses, guiding the user in exploring their thoughts and emotions reflectively. Do not replace professional advice, but offer emotional support and tools to help them cope with their issues. Ask open-ended questions to help the person dive deeper into their thoughts and emotions. Use a kind, attentive, and non-judgmental tone.',
+        ];
+
         $messages = [
-            ['role' => 'system', 'content' => $prompt],
+            ['role' => 'system', 'content' => $promptDescription[$prompt] ?? $promptDescription['assistant']],
             ['role' => 'user', 'content' => $text]
         ];
 

@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('chatbot')->name('chatbot.')->group(function () {
         Route::get('/', [ChatBotController::class, 'index'])->name('index');
+        Route::post('/', [ChatBotController::class, 'store'])->name('store');
     });
 });
 

@@ -20,7 +20,8 @@
                                 class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700
                                        text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
                             <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                            <option value="text-davinci-003">Davinci</option>
+                            <option value="gpt-4o-mini">GPT-4o-mini</option>
+                            <option value="gpt-4o">GPT-4o</option>
                         </select>
                     </div>
                     <div class="flex-1">
@@ -39,46 +40,56 @@
                         <select v-model="prompt"
                                 class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700
                                        text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
-                            <option value="translation">Traducción</option>
-                            <option value="summary">Resumen</option>
-                            <option value="qa">Preguntas y Respuestas</option>
+                            <option value="assistant">Assistant</option>
+                            <option value="grammar_correction">Grammar Correction</option>
+                            <option value="sarcastic_response">Sarcastic</option>
+                            <option value="code_explainer">Code Explainer</option>
+                            <option value="simplify_text">Simplify Text</option>
+                            <option value="code_interviewer">Code Interviewer</option>
+                            <option value="improve_code_efficiency">Improve Code</option>
+                            <option value="translator">Translation</option>
+                            <option value="psychologist">Psychologist</option>
                         </select>
                     </div>
                 </div>
 
                 <!-- Chat Messages -->
                 <div ref="chatContainer"
-                     class="border border-gray-300 dark:border-gray-600 rounded-md p-4 h-96 overflow-y-auto mb-4">
+                    :class="['border border-gray-300 dark:border-gray-600 rounded-md p-4 h-96 overflow-y-auto mb-4', { blinking: isGenerating }]"
+                    >
                     <div v-for="(msg, index) in messages" :key="index"
                          :class="['mb-2 flex', msg.sender === 'bot' ? 'justify-start' : 'justify-end']">
-                         <div :class="[
+                        <div :class="[
                                 'message',
                                 msg.sender === 'bot'
                                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                                 : 'bg-blue-500 text-white'
                             ]"
-                            class="p-3 rounded-md max-w-xs">
+                            class="p-3 rounded-md max-w-lg md:max-w-xl">
                             {{ msg.text }}
                         </div>
                     </div>
                 </div>
 
-                <!-- Send Message -->
+                <div v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</div>
+
                 <div class="flex space-x-2">
-                    <textarea rows="2" v-model="userInput"
-                              :disabled="isGenerating"
-                              @keydown.enter.prevent="sendMessage"
-                              class="flex-1 p-2 border rounded-md bg-white dark:bg-gray-700
-                                     text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600
-                                     resize-none"
-                              placeholder="Write your Message..."></textarea>
+                    <textarea ref="messageInput" rows="2" v-model="userInput"
+                            :disabled="isGenerating"
+                            @input="limitText"
+                            @keydown.enter.prevent="sendMessage"
+                            class="flex-1 p-2 border rounded-md bg-white dark:bg-gray-700
+                                text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600
+                                resize-none"
+                            placeholder="Write your Message..."></textarea>
                     <button @click="sendMessage"
                             :disabled="isGenerating"
                             class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none
-                                   disabled:opacity-50 disabled:cursor-not-allowed">
+                                disabled:opacity-50 disabled:cursor-not-allowed">
                         Send
                     </button>
                 </div>
+                <div class="text-left text-sm text-gray-400">{{ userInput.length }} / 600</div>
             </div>
         </div>
     </AuthenticatedLayout>
@@ -88,10 +99,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { ref, watch, nextTick, onMounted } from "vue";
+import axios from "axios";
 
 const selectedModel = ref("gpt-3.5-turbo");
 const temperature = ref(0.7);
-const prompt = ref("translation");
+const prompt = ref("assistant");
 const userInput = ref("");
 const messages = ref([
     { sender: "bot", text: "Hola, soy el bot." },
@@ -100,6 +112,8 @@ const messages = ref([
 const isGenerating = ref(false);
 const chatContainer = ref(null);
 
+const errorMessage = ref("");
+
 const scrollToBottom = async () => {
     await nextTick();
     if (chatContainer.value) {
@@ -107,47 +121,81 @@ const scrollToBottom = async () => {
     }
 };
 
-// Aseguramos que el scroll siempre esté al fondo al montar y al actualizar mensajes
 onMounted(scrollToBottom);
 watch(messages, scrollToBottom);
 
+const limitText = () => {
+    if (userInput.value.length > 600) {
+        userInput.value = userInput.value.slice(0, 600);
+    }
+};
+
+const messageInput = ref(null);
+
 const sendMessage = async () => {
+    errorMessage.value = "";
+    if (userInput.value.trim().length < 4) {
+        errorMessage.value = "Mínimo 4 caracteres.";
+        return;
+    }
+    if (userInput.value.trim().length > 600) {
+        errorMessage.value = "Máximo 600 caracteres.";
+        return;
+    }
     if (!userInput.value.trim() || isGenerating.value) return;
+
+    // Enviar mensaje del usuario
+    messages.value.push({ sender: "user", text: userInput.value });
+    userInput.value = ""; // Clear input immediately
+    await scrollToBottom(); // Scroll after adding user message
 
     isGenerating.value = true;
 
-    // Agregar mensaje del usuario
-    messages.value.push({ sender: "user", text: userInput.value });
-        await nextTick();
-        scrollToBottom();
-    // Agregar mensaje del bot como marcador de posición
-    const placeholderMsg = {
-        sender: "bot",
-        text: "El bot está escribiendo...",
-    };
+    // Mensaje temporal mientras el bot responde
+    const placeholderMsg = { sender: "bot", text: "El bot está escribiendo" };
     messages.value.push(placeholderMsg);
+    await scrollToBottom(); // Scroll after adding bot placeholder
 
-    // Simular respuesta del bot
-    setTimeout(async () => {
-    placeholderMsg.text = "Esto es una respuesta simulada.";
-    await nextTick();
-    scrollToBottom();
+    try {
+        const { data } = await axios.post("/chatbot", {
+            text: messages.value[messages.value.length - 2].text,
+            model: selectedModel.value,
+            prompt: prompt.value,
+            temperature: temperature.value,
+        });
+        placeholderMsg.text = data.bot_message;
+    } catch (err) {
+        placeholderMsg.text = "Error: " + (err.response?.data.message || "Desconocido");
+        errorMessage.value = err.response?.data.message || "Ocurrió un error.";
+    }
+
     isGenerating.value = false;
-}, 1500);
-
-    userInput.value = "";
+    await nextTick();
+    messageInput.value.focus(); // Set focus back to input
+    scrollToBottom();
 };
 </script>
 
 <style scoped>
-h2 {
-    margin-bottom: 1rem;
+    .message {
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+    }
+
+    .blinking {
+    animation: blinkingText 1.2s infinite;
 }
 
-.message {
-    word-wrap: break-word;
-    word-break: break-all;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
+@keyframes blinkingText {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
+
+    /* Ensure chat container scrolls to bottom */
+    .border {
+        overflow-y: auto;
+    }
 </style>
