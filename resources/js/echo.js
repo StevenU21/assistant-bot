@@ -34,7 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .listen('SpeechAudioCompleted', (e) => {
                     console.log('Speech to Text Completed:', e);
-                });
+                })
+                .listen('ImageUploadStarted', (e) => {
+                    console.log('Image Process Started:', e);
+                })
+                .listen('ImageUploadCompleted', (e) => {
+                    console.log('Image Process Completed:', e);
+                })
         } else {
             console.error('Meta tag with name "user-id" not found.');
         }
