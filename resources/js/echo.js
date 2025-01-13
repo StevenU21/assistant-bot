@@ -18,30 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userIdMeta = document.head.querySelector('meta[name="user-id"]');
         if (userIdMeta) {
             const userId = userIdMeta.content;
-
-            // window.Echo.channel(`transcriptions.${userId}`)
-            //     .subscribed(() => {
-            //         console.log(`Successfully subscribed to the transcriptions channel for user ${userId}.`);
-            //     })
-            //     .listen('TranscriptionStarted', (e) => {
-            //         console.log('Transcription started:', e);
-            //     })
-            //     .listen('TranscriptionCompleted', (e) => {
-            //         console.log('Transcription completed:', e);
-            //     })
-            //     .listen('SpeechAudioStarted', (e) => {
-            //         console.log('Speech to Text Started:', e);
-            //     })
-            //     .listen('SpeechAudioCompleted', (e) => {
-            //         console.log('Speech to Text Completed:', e);
-            //     })
-            //     .listen('ImageUploadStarted', (e) => {
-            //         console.log('Image Process Started:', e);
-            //     })
-            //     .listen('ImageUploadCompleted', (e) => {
-            //         console.log('Image Process Completed:', e);
-            //     })
-
+            
             window.Echo.channel(`processes.${userId}`)
                 .subscribed(() => {
                     console.log(`Successfully subscribed to the processes channel for user ${userId}.`);
