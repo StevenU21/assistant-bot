@@ -105,7 +105,7 @@ import Modal from "@/Components/Modal.vue";
 import Form from "@/Pages/Images/Form.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { format } from 'date-fns';
 
 defineProps({
@@ -146,8 +146,16 @@ const deleteImage = (id) => {
                 onSuccess: () => {
                     Swal.fire("Deleted!", "Image has been deleted.", "success");
                 },
-                onError: () => {
-                    Swal.fire("Failed!", "Failed to delete image.", "error");
+                onError: (error) => {
+                    if (error.response.status === 429) {
+                        Swal.fire(
+                            "Error!",
+                            error.response.data.message,
+                            "error"
+                        );
+                    } else {
+                        Swal.fire("Failed!", "Failed to delete image.", "error");
+                    }
                 },
             });
         }
@@ -169,8 +177,16 @@ const submitForm = (formData) => {
         onSuccess: () => {
             showModal.value = false;
         },
-        onError: (newErrors) => {
-            errors.value = newErrors;
+        onError: (error) => {
+            if (error.response.status === 429) {
+                Swal.fire(
+                    "Error!",
+                    error.response.data.message,
+                    "error"
+                );
+            } else {
+                errors.value = error.response.data.errors;
+            }
         },
     });
 };
@@ -194,4 +210,11 @@ const updateImages = () => {
         },
     });
 };
+
+// Watch for session messages and display them using SweetAlert
+watch(() => page.props.flash, (flash) => {
+    if (flash && flash.message) {
+        Swal.fire("Error!", flash.message, "error");
+    }
+});
 </script>

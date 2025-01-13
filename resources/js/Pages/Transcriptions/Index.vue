@@ -222,12 +222,20 @@ const deletetranscription = (slug) => {
                         "success"
                     );
                 },
-                onError: () => {
-                    Swal.fire(
-                        "Failed!",
-                        "Failed to delete transcription.",
-                        "error"
-                    );
+                onError: (error) => {
+                    if (error.response.status === 429) {
+                        Swal.fire(
+                            "Error!",
+                            error.response.data.message,
+                            "error"
+                        );
+                    } else {
+                        Swal.fire(
+                            "Failed!",
+                            "Failed to delete transcription.",
+                            "error"
+                        );
+                    }
                 },
             });
         }
@@ -248,8 +256,16 @@ const submitForm = (formData) => {
         onSuccess: () => {
             showModal.value = false;
         },
-        onError: (newErrors) => {
-            errors.value = newErrors;
+        onError: (error) => {
+            if (error.response.status === 429) {
+                Swal.fire(
+                    "Error!",
+                    error.response.data.message,
+                    "error"
+                );
+            } else {
+                errors.value = error.response.data.errors;
+            }
         },
     });
 };
@@ -273,4 +289,11 @@ const updateTranscriptions = () => {
         },
     });
 };
+
+// Watch for session messages and display them using SweetAlert
+watch(() => page.props.flash, (flash) => {
+    if (flash && flash.message) {
+        Swal.fire("Error!", flash.message, "error");
+    }
+});
 </script>

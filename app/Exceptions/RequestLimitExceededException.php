@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 
 class RequestLimitExceededException extends Exception
 {
@@ -13,6 +14,9 @@ class RequestLimitExceededException extends Exception
 
     public function render()
     {
-        return response()->json(['error' => $this->getMessage()], $this->getCode());
+        return redirect()->back()->with([
+            'message' => $this->getMessage(),
+            'status' => 'error'
+        ]);
     }
 }
