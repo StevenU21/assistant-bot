@@ -78,6 +78,8 @@ class OpenAIService
 
     public function conversation($text, $model, $prompt = 'assistant', $temperature)
     {
+        $globalInstruction = 'Use markdown format whenever you consider it necessary to enrich the text of your responses.';
+
         $promptDescription = [
             'assistant' => 'You are an AI assistant. Provide helpful responses to user queries.',
             'grammar_correction' => 'You will be provided with statements, and your task is to convert them to standard English.',
@@ -91,7 +93,7 @@ class OpenAIService
         ];
 
         $messages = [
-            ['role' => 'system', 'content' => $promptDescription[$prompt] . 'and Use markdown format whenever you consider it necessary to enrich the text of your responses.' ?? $promptDescription['assistant']],
+            ['role' => 'system', 'content' => ($promptDescription[$prompt] ?? $promptDescription['assistant']) . $globalInstruction],
             ['role' => 'user', 'content' => $text]
         ];
 
