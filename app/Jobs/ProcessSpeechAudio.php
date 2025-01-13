@@ -34,7 +34,6 @@ class ProcessSpeechAudio implements ShouldQueue
     /**
      * Execute the job.
      */
-
     public function handle(OpenAIService $openAIService)
     {
         // Generate audio using OpenAIService
@@ -42,10 +41,10 @@ class ProcessSpeechAudio implements ShouldQueue
 
         // Get user name and create slug
         $user = User::find($this->userId);
-        $userNameSlug = Str::slug($user->name, '-');
+        $userNameSlug = Str::slug($user->name . '-' . $user->id, '-');
 
         // Create user-specific directory
-        $userDirectory = 'speech_audios/' . $userNameSlug;
+        $userDirectory = $userNameSlug . '/speech_audios';
         if (!Storage::disk('public')->exists($userDirectory)) {
             Storage::disk('public')->makeDirectory($userDirectory);
         }

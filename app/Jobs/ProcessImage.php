@@ -52,10 +52,10 @@ class ProcessImage implements ShouldQueue
 
         // Get user name
         $user = User::find($this->userId);
-        $userName = Str::slug($user->name, '-');
+        $userNameSlug = Str::slug($user->name . '-' . $user->id, '-');
 
         // Create user-specific directory
-        $userDirectory = 'images/' . $userName;
+        $userDirectory = $userNameSlug . '/images';
         if (!Storage::disk('public')->exists($userDirectory)) {
             Storage::disk('public')->makeDirectory($userDirectory);
         }
