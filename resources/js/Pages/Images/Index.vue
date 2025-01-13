@@ -20,7 +20,6 @@
                 <!-- Tabla de imágenes -->
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="overflow-x-auto">
-                        <ProgressBar ref="progressBar" />
                         <table class="w-full min-w-max">
                             <thead>
                                 <tr>
@@ -104,7 +103,6 @@ import Pagination from "@/Components/Pagination.vue";
 import DropdownMenu from "@/Components/DropdownMenu.vue";
 import Modal from "@/Components/Modal.vue";
 import Form from "@/Pages/Images/Form.vue";
-import ProgressBar from '@/Components/ProgressBar.vue';
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, onMounted } from "vue";
@@ -177,43 +175,19 @@ const submitForm = (formData) => {
     });
 };
 
-const progressBar = ref(null);
 const page = usePage();
 
-const startProgress = () => {
-    if (progressBar.value) {
-        progressBar.value.start();
-        isProgressing.value = true;
-        localStorage.setItem('isProgressing', 'true');
-    }
-};
-
-const stopProgress = () => {
-    if (progressBar.value) {
-        progressBar.value.stop();
-        isProgressing.value = false;
-        localStorage.removeItem('isProgressing');
-    }
-};
-
 onMounted(() => {
-    if (localStorage.getItem('isProgressing') === 'true') {
-        startProgress();
-    }
-
-    window.Echo.channel(`transcriptions.${page.props.auth.user.id}`)
-        .listen("ImageUploadStarted", () => {
-            startProgress();
-        })
-        .listen("ImageUploadCompleted", () => {
-            stopProgress();
+    window.Echo.channel(`processes.${page.props.auth.user.id}`).listen(
+        "ProcessStatusCompleted",
+        () => {
             updateImages();
-        });
+        }
+    );
 });
 
 const updateImages = () => {
-    router.visit(route("images.index"), {
-        preserveScroll: true,
+    router.reload({
         only: ["images"],
         onError: () => {
             Swal.fire("Error!", "Failed to update images.", "error");

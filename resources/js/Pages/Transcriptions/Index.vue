@@ -27,7 +27,6 @@
                     class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
                 >
                     <div class="overflow-x-auto">
-                        <ProgressBar ref="progressBar" />
                         <table class="w-full min-w-max">
                             <thead>
                                 <tr>
@@ -169,9 +168,6 @@
                 :errors="errors"
             />
         </Modal>
-
-        <!-- Transcription Progress Animation -->
-        <!-- <TranscriptionProgress ref="transcriptionProgress" id="transcription-progress" /> -->
     </AuthenticatedLayout>
 </template>
 
@@ -183,8 +179,7 @@ import AudioPlayer from "@/Components/AudioPlayer.vue";
 import DropdownMenu from "@/Components/DropdownMenu.vue";
 import Modal from "@/Components/Modal.vue";
 import Form from "@/Pages/Transcriptions/Form.vue";
-import ProgressBar from '@/Components/ProgressBar.vue';
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, onMounted, watch } from "vue";
 
@@ -200,7 +195,6 @@ defineProps({
 
 const showModal = ref(false);
 const errors = ref({});
-const isProgressing = ref(false);
 
 const truncate = (text, length) => {
     if (text.length <= length) {
@@ -260,56 +254,23 @@ const submitForm = (formData) => {
     });
 };
 
-const progressBar = ref(null);
 const page = usePage();
 
-const startProgress = () => {
-    if (progressBar.value) {
-        progressBar.value.start();
-        isProgressing.value = true;
-        localStorage.setItem('isProgressing', 'true');
-    }
-};
-
-const stopProgress = () => {
-    if (progressBar.value) {
-        progressBar.value.stop();
-        isProgressing.value = false;
-        localStorage.removeItem('isProgressing'); // Eliminar el item de localStorage
-    }
-};
-
 onMounted(() => {
-    // Recuperar el estado de la barra de progreso desde localStorage
-    if (localStorage.getItem('isProgressing') === 'true') {
-        startProgress();
-    }
-
-    // Suscribirse al canal de Echo
-    window.Echo.channel(`transcriptions.${page.props.auth.user.id}`)
-    .listen("TranscriptionStarted", () => {
-            startProgress();
-        })
-        .listen("TranscriptionCompleted", () => {
-            stopProgress();
+    window.Echo.channel(`processes.${page.props.auth.user.id}`).listen(
+        "ProcessStatusCompleted",
+        () => {
             updateTranscriptions();
-        });
+        }
+    );
 });
 
 const updateTranscriptions = () => {
-    router.visit(route("transcriptions.index"), {
-        preserveScroll: true, // Mantener la posición de la página
-        only: ["transcriptions"], // Solo recargar las transcripciones,
+    router.reload({
+        only: ["transcriptions"],
         onError: () => {
             Swal.fire("Error!", "Failed to update transcriptions.", "error");
         },
     });
 };
-
-// Limpiar el estado de la barra de progreso al desmontar el componente
-watch(isProgressing, (newValue) => {
-    if (!newValue) {
-        localStorage.removeItem('isProgressing');
-    }
-});
 </script>
