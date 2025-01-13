@@ -23,8 +23,8 @@ class TranslationRequest extends FormRequest
     {
         return [
             'text' => ['required', 'string', 'min:3', 'max:255'],
-            'sourceLanguage' => ['required', 'string', 'in:en,es'],
-            'targetLanguage' => ['required', 'string', 'in:en,es'],
+            'sourceLanguage' => ['required', 'string', 'in:en,es,ru,zh,fr,de,it,ja,ko,pt,ar'],
+            'targetLanguage' => ['required', 'string', 'in:en,es,ru,zh,fr,de,it,ja,ko,pt,ar'],
         ];
     }
 

@@ -15,9 +15,9 @@
                         <div class="w-full md:w-1/2">
                             <label for="sourceLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Source Language</label>
                             <select v-model="sourceLanguage" id="sourceLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200">
-                                <option value="en">English</option>
-                                <option value="es">Spanish</option>
-                                <!-- Add more languages as needed -->
+                                <option v-for="lang in languages" :key="lang.value" :value="lang.value">
+                                    {{ lang.label }}
+                                </option>
                             </select>
                         </div>
                         <div class="flex items-center justify-center md:w-auto">
@@ -28,9 +28,9 @@
                         <div class="w-full md:w-1/2">
                             <label for="targetLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Target Language</label>
                             <select v-model="targetLanguage" id="targetLanguage" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200">
-                                <option value="en">English</option>
-                                <option value="es">Spanish</option>
-                                <!-- Add more languages as needed -->
+                                <option v-for="lang in languages" :key="lang.value" :value="lang.value">
+                                    {{ lang.label }}
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -60,6 +60,20 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import axios from "axios";
+
+const languages = [
+    { value: "en", label: "English" },
+    { value: "es", label: "Spanish" },
+    { value: "ru", label: "Russian" },
+    { value: "zh", label: "Chinese" },
+    { value: "fr", label: "French" },
+    { value: "de", label: "German" },
+    { value: "it", label: "Italian" },
+    { value: "ja", label: "Japanese" },
+    { value: "ko", label: "Korean" },
+    { value: "pt", label: "Portuguese" },
+    { value: "ar", label: "Arabic" },
+];
 
 const sourceLanguage = ref("en");
 const targetLanguage = ref("es");
@@ -109,19 +123,3 @@ const translateText = () => {
     });
 };
 </script>
-
-<style scoped>
-.rotate-180 {
-    transform: rotate(180deg);
-}
-
-.blinking {
-    animation: blinkingText 1.2s infinite;
-}
-
-@keyframes blinkingText {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-</style>
