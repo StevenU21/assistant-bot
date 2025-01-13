@@ -28,7 +28,6 @@
                     <option value="" disabled selected>Select a Language</option>
                     <option value="en">English</option>
                     <option value="es">Spanish</option>
-                    <option value="ru">Russian</option>
                 </select>
             </div>
             <InputError :message="form.errors.language" class="mt-2 text-red-500" />
