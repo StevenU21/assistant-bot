@@ -3,14 +3,11 @@
 namespace App\Jobs;
 
 use App\Events\ProcessStatusCompleted;
-use App\Events\ProcessStatusStarted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\SpeechAudio;
 use Illuminate\Support\Facades\Storage;
 use App\Services\OpenAIService;
-use App\Events\SpeechAudioStarted;
-use App\Events\SpeechAudioCompleted;
 
 class ProcessSpeechAudio implements ShouldQueue
 {

@@ -2,8 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\ImageUploadCompleted;
-use App\Events\ImageUploadStarted;
+use App\Events\ProcessStatusCompleted;
 use App\Services\OpenAIService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -40,9 +39,6 @@ class ProcessImage implements ShouldQueue
      */
     public function handle(OpenAIService $openAIService)
     {
-        // Dispatch event
-        event(new ImageUploadStarted($this->userId));
-
         // Generate image using OpenAIService
         $response = $openAIService->textToImage($this->model,$this->prompt, $this->style, $this->size, $this->quality);
 
@@ -64,6 +60,6 @@ class ProcessImage implements ShouldQueue
         ]);
 
         // Dispatch event
-        event(new ImageUploadCompleted($this->userId));
+        event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
     }
 }

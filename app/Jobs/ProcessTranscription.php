@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Events\TranscriptionStarted;
+use App\Events\ProcessStatusCompleted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -10,7 +10,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Transcription;
 use Illuminate\Support\Str;
-use App\Events\TranscriptionCompleted;
 use Illuminate\Support\Facades\Storage;
 use App\Services\OpenAIService;
 
@@ -39,7 +38,6 @@ class ProcessTranscription implements ShouldQueue
      */
     public function handle(OpenAIService $openAIService)
     {
-        event(new TranscriptionStarted($this->userId));
         // Obtener la ruta completa del archivo en el sistema
         $absoluteFilePath = Storage::disk('public')->path($this->filePath);
 
@@ -56,6 +54,6 @@ class ProcessTranscription implements ShouldQueue
         ]);
 
         // Despachar evento del fin de la transcripción
-        event(new TranscriptionCompleted($this->userId));
+        event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
     }
 }

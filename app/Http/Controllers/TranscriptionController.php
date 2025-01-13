@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Events\ProcessStatusStarted;
 use App\Http\Requests\TranscriptionRequest;
 use App\Models\Transcription;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,8 @@ class TranscriptionController extends Controller
 
         $storedFilePath = $file->store('audios', 'public');
         $fileName = $file->getClientOriginalName();
-        
+
+        event(new ProcessStatusStarted(auth()->id(), 'Generating transcription'));
         // Despachar el trabajo en cola (usar ruta relativa)
         ProcessTranscription::dispatch($storedFilePath, $fileName, $language, auth()->id());
 

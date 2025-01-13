@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProcessStatusStarted;
 use App\Http\Requests\ImageRequest;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -31,6 +32,8 @@ class ImageController extends Controller
         $style = $request->validated()['style'];
         $size = $request->validated()['size'];
 
+
+        event(new ProcessStatusStarted(auth()->id(), 'Generating image'));
         // Dispatch job
         ProcessImage::dispatch($model, $prompt, $style, $size, $quality, auth()->id());
 
