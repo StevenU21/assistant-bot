@@ -6,18 +6,22 @@ use App\Events\ProcessStatusStarted;
 use App\Http\Requests\TextToSpeechRequest;
 use App\Jobs\ProcessSpeechAudio;
 use App\Models\SpeechAudio;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Auth;
 
 class SpeechAudioController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(): Response
     {
-        $userId = auth()->id();
+        $user = Auth::user()->load('user_request');
         $speechAudios = SpeechAudio::with('user')
-            ->where('user_id', $userId)
+            ->where('user_id', $user->id)
             ->latest()
             ->paginate(10);
 
@@ -31,6 +35,7 @@ class SpeechAudioController extends Controller
 
     public function store(TextToSpeechRequest $request)
     {
+        $this->authorize('makeRequest', auth()->user());
         // Get request data
         $text = $request->validated()['text'];
         $voice = $request->validated()['voice'];

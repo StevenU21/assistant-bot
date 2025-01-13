@@ -85,6 +85,11 @@ onMounted(() => {
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                            <div class="relative ms-3">
+                                <span class="inline-flex items-center rounded-md bg-blue-100 px-3 py-2 text-sm font-medium text-blue-800">
+                                    Requests left: {{ $page.props.auth.user.user_request.request_count }}
+                                </span>
+                            </div>
                             <!-- Settings Dropdown -->
                             <div class="relative ms-3">
                                 <Dropdown align="right" width="48">

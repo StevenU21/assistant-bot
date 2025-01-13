@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Events\ProcessStatusStarted;
 use App\Http\Requests\TranscriptionRequest;
 use App\Models\Transcription;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -11,14 +12,16 @@ use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessTranscription;
+use Illuminate\Support\Facades\Auth;
 
 class TranscriptionController extends Controller
 {
+    use AuthorizesRequests;
     public function index(): Response
     {
-        $userId = auth()->id();
+        $user = Auth::user()->load('user_request');
         $transcriptions = Transcription::with('user')
-            ->where('user_id', $userId)
+            ->where('user_id', $user->id)
             ->latest()
             ->paginate(10);
 
@@ -32,6 +35,8 @@ class TranscriptionController extends Controller
 
     public function store(TranscriptionRequest $request): RedirectResponse
     {
+        $this->authorize('makeRequest', auth()->user());
+
         $file = $request->file('audio');
         $language = $request->input('language');
 
