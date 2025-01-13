@@ -28,6 +28,7 @@ class ChatBotController extends Controller
     public function store(ChatBotRequest $request)
     {
         $this->authorize('makeRequest', auth()->user());
+        
         $text = $request->validated()['text'];
         $model = $request->validated()['model'];
         $prompt = $request->validated()['prompt'];
