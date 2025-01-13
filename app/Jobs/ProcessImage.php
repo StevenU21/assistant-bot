@@ -8,7 +8,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use App\Models\User;
 use App\Models\Image;
+use Illuminate\Support\Str;
 
 class ProcessImage implements ShouldQueue
 {
@@ -39,7 +41,7 @@ class ProcessImage implements ShouldQueue
     public function handle(OpenAIService $openAIService)
     {
         // Generate image using OpenAIService
-        $response = $openAIService->textToImage($this->model,$this->prompt, $this->style, $this->size, $this->quality);
+        $response = $openAIService->textToImage($this->model, $this->prompt, $this->style, $this->size, $this->quality);
 
         // Extract URL and enhanced prompt from response
         $imageUrl = $response['url'];
@@ -48,8 +50,18 @@ class ProcessImage implements ShouldQueue
         // Download image content
         $imageContent = Http::get($imageUrl)->body();
 
-        // Save image file to storage
-        $imagePath = 'images/' . uniqid() . '.png';
+        // Get user name
+        $user = User::find($this->userId);
+        $userName = Str::slug($user->name, '-');
+
+        // Create user-specific directory
+        $userDirectory = 'images/' . $userName;
+        if (!Storage::disk('public')->exists($userDirectory)) {
+            Storage::disk('public')->makeDirectory($userDirectory);
+        }
+
+        // Save image file to user-specific directory
+        $imagePath = $userDirectory . '/' . uniqid() . '.png';
         Storage::disk('public')->put($imagePath, $imageContent);
 
         // Create Image record
@@ -60,6 +72,6 @@ class ProcessImage implements ShouldQueue
         ]);
 
         // Dispatch event
-        event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
+        event(new ProcessStatusCompleted($this->userId, 'Image generated'));
     }
 }

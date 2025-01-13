@@ -12,6 +12,7 @@ use App\Models\Transcription;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Services\OpenAIService;
+use App\Models\User;
 
 class ProcessTranscription implements ShouldQueue
 {
@@ -44,6 +45,20 @@ class ProcessTranscription implements ShouldQueue
         // Procesar la transcripción
         $response = $openAIService->transcribe($absoluteFilePath, $this->language);
 
+        // Get user name and create slug
+        $user = User::find($this->userId);
+        $userNameSlug = Str::slug($user->name, '-');
+
+        // Create user-specific directory
+        $userDirectory = 'transcriptions/' . $userNameSlug;
+        if (!Storage::disk('public')->exists($userDirectory)) {
+            Storage::disk('public')->makeDirectory($userDirectory);
+        }
+
+        // Save transcription file to user-specific directory
+        $transcriptionPath = $userDirectory . '/' . uniqid() . '.txt';
+        Storage::disk('public')->put($transcriptionPath, $response['text']);
+
         // Guardar en la base de datos
         Transcription::create([
             'title' => $this->fileName,
@@ -55,6 +70,6 @@ class ProcessTranscription implements ShouldQueue
         ]);
 
         // Despachar evento del fin de la transcripción
-        event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
+        event(new ProcessStatusCompleted($this->userId, 'Transcription completed'));
     }
 }
