@@ -261,8 +261,7 @@ onMounted(() => {
 });
 
 const updateSpeechAudios = () => {
-    router.visit(route("speech_audios.index"), {
-        preserveScroll: true,
+    router.reload({
         only: ["speechAudios"],
         onError: () => {
             Swal.fire("Error!", "Failed to update speech audios.", "error");
