@@ -123,3 +123,17 @@ const translateText = () => {
     });
 };
 </script>
+
+<style scoped>
+.rotate-180 {
+    transform: rotate(180deg);
+}
+.blinking {
+    animation: blinkingText 1.2s infinite;
+}
+@keyframes blinkingText {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+</style>
