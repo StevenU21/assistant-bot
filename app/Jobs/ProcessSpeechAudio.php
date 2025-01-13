@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Events\ProcessStatusCompleted;
+use App\Events\ProcessStatusStarted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use App\Models\SpeechAudio;
@@ -17,7 +19,6 @@ class ProcessSpeechAudio implements ShouldQueue
     protected $text;
     protected $voice;
     protected $model;
-
     protected $userId;
 
     /**
@@ -38,7 +39,8 @@ class ProcessSpeechAudio implements ShouldQueue
     public function handle(OpenAIService $openAIService)
     {
         // Dispatch event
-        event(new SpeechAudioStarted($this->userId));
+        // event(new SpeechAudioStarted($this->userId));
+   
         // Generate audio using OpenAIService
         $audioContent = $openAIService->textToSpeech($this->text, $this->voice, $this->model);
 
@@ -54,5 +56,6 @@ class ProcessSpeechAudio implements ShouldQueue
 
         // Dispatch event
         event(new SpeechAudioCompleted($this->userId));
+        event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
     }
 }

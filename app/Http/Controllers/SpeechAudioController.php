@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProcessStatusStarted;
 use App\Http\Requests\TextToSpeechRequest;
 use App\Jobs\ProcessSpeechAudio;
 use App\Models\SpeechAudio;
@@ -30,6 +31,8 @@ class SpeechAudioController extends Controller
         $text = $request->validated()['text'];
         $voice = $request->validated()['voice'];
         $model = $request->validated()['model'];
+
+        event(new ProcessStatusStarted(auth()->id(), 'Generating audio'));
 
         // Depach job
         ProcessSpeechAudio::dispatch($text, $voice, $model, auth()->id());
