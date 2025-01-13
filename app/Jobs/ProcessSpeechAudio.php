@@ -38,9 +38,6 @@ class ProcessSpeechAudio implements ShouldQueue
 
     public function handle(OpenAIService $openAIService)
     {
-        // Dispatch event
-        // event(new SpeechAudioStarted($this->userId));
-   
         // Generate audio using OpenAIService
         $audioContent = $openAIService->textToSpeech($this->text, $this->voice, $this->model);
 
@@ -53,9 +50,6 @@ class ProcessSpeechAudio implements ShouldQueue
             'text' => $this->text,
             'voice' => $audioPath,
         ]);
-
-        // Dispatch event
-        event(new SpeechAudioCompleted($this->userId));
         event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
     }
 }

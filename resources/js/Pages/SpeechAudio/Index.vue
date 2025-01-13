@@ -27,7 +27,6 @@
                     class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
                 >
                     <div class="overflow-x-auto">
-                        <ProgressBar ref="progressBar" />
                         <table class="w-full min-w-max">
                             <thead>
                                 <tr>
@@ -76,7 +75,14 @@
                                     </td>
 
                                     <td class="text-white px-4 py-2">
-                                        {{ format(new Date(speechAudio.created_at), 'dd/MM/yyyy HH:mm:ss') }}
+                                        {{
+                                            format(
+                                                new Date(
+                                                    speechAudio.created_at
+                                                ),
+                                                "dd/MM/yyyy HH:mm:ss"
+                                            )
+                                        }}
                                     </td>
 
                                     <td
@@ -168,11 +174,10 @@ import AudioPlayer from "@/Components/AudioPlayer.vue";
 import DropdownMenu from "@/Components/DropdownMenu.vue";
 import Modal from "@/Components/Modal.vue";
 import Form from "@/Pages/SpeechAudio/Form.vue";
-import ProgressBar from "@/Components/ProgressBar.vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
-import { ref, onMounted, watch } from "vue";
-import { format } from 'date-fns';
+import { ref, onMounted} from "vue";
+import { format } from "date-fns";
 
 defineProps({
     speechAudios: {
@@ -186,7 +191,7 @@ defineProps({
 
 const showModal = ref(false);
 const errors = ref({});
-const isProgressing = ref(false);
+const page = usePage();
 
 const truncate = (text, length) => {
     if (text.length <= length) {
@@ -246,38 +251,13 @@ const submitForm = (formData) => {
     });
 };
 
-const progressBar = ref(null);
-const page = usePage();
-
-const startProgress = () => {
-    if (progressBar.value) {
-        progressBar.value.start();
-        isProgressing.value = true;
-        localStorage.setItem("isProgressing", "true");
-    }
-};
-
-const stopProgress = () => {
-    if (progressBar.value) {
-        progressBar.value.stop();
-        isProgressing.value = false;
-        localStorage.removeItem("isProgressing");
-    }
-};
-
 onMounted(() => {
-    if (localStorage.getItem("isProgressing") === "true") {
-        startProgress();
-    }
-
-    window.Echo.channel(`transcriptions.${page.props.auth.user.id}`)
-        .listen("SpeechAudioStarted", () => {
-            startProgress();
-        })
-        .listen("SpeechAudioCompleted", () => {
-            stopProgress();
+    window.Echo.channel(`processes.${page.props.auth.user.id}`).listen(
+        "ProcessStatusCompleted",
+        () => {
             updateSpeechAudios();
-        });
+        }
+    );
 });
 
 const updateSpeechAudios = () => {
@@ -289,10 +269,4 @@ const updateSpeechAudios = () => {
         },
     });
 };
-
-watch(isProgressing, (newValue) => {
-    if (!newValue) {
-        localStorage.removeItem("isProgressing");
-    }
-});
 </script>
