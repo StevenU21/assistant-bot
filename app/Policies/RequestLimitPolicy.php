@@ -16,7 +16,6 @@ class RequestLimitPolicy
             throw new RequestLimitExceededException();
         }
 
-        // Decrementar el contador de peticiones
         $userRequest->decrement('request_count');
 
         return true;
