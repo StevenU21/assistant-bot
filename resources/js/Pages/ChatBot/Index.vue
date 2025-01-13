@@ -57,15 +57,28 @@
                 <div ref="chatContainer"
                     :class="['border border-gray-300 dark:border-gray-600 rounded-md p-4 h-96 overflow-y-auto mb-4', { blinking: isGenerating }]"
                     >
-                    <div v-for="(msg, index) in messages" :key="index"
-                         :class="['mb-2 flex', msg.sender === 'bot' ? 'justify-start' : 'justify-end']">
-                        <div :class="[
-                                'message',
-                                msg.sender === 'bot'
-                                ? 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-                                : 'bg-blue-500 text-white'
+                    <div
+                        v-for="(msg, index) in messages"
+                        :key="index"
+                        :class="['mb-2 flex', msg.sender === 'bot' ? 'justify-start' : 'justify-end']"
+                        >
+                        <div
+                            v-if="msg.sender === 'bot'"
+                            v-html="renderMarkdown(msg.text)"
+                            :class="[
+                            'message',
+                            'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
                             ]"
-                            class="p-3 rounded-md max-w-lg md:max-w-xl">
+                            class="p-3 rounded-md max-w-lg md:max-w-xl"
+                        />
+                        <div
+                            v-else
+                            :class="[
+                            'message',
+                            'bg-blue-500 text-white'
+                            ]"
+                            class="p-3 rounded-md max-w-lg md:max-w-xl"
+                        >
                             {{ msg.text }}
                         </div>
                     </div>
@@ -100,6 +113,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { ref, watch, nextTick, onMounted } from "vue";
 import axios from "axios";
+import { marked } from 'marked';
+
+function renderMarkdown(text) {
+    return marked(text);
+}
 
 const selectedModel = ref("gpt-3.5-turbo");
 const temperature = ref(0.7);

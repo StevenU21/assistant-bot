@@ -91,7 +91,7 @@ class OpenAIService
         ];
 
         $messages = [
-            ['role' => 'system', 'content' => $promptDescription[$prompt] ?? $promptDescription['assistant']],
+            ['role' => 'system', 'content' => $promptDescription[$prompt] . 'and Use markdown format whenever you consider it necessary to enrich the text of your responses.' ?? $promptDescription['assistant']],
             ['role' => 'user', 'content' => $text]
         ];
 
