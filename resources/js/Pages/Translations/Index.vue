@@ -41,7 +41,14 @@
                                 {{ sourceText.length }} / 255
                             </div>
                         </div>
-                        <textarea v-model="translatedText" :class="{ 'blinking': isTranslating }" class="w-full md:w-1/2 p-4 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600" rows="10" placeholder="Translated text" readonly></textarea>
+                        <textarea
+                            v-model="translatedText"
+                            :class="{ 'blinking': isTranslating, 'text-red-500': isError }"
+                            class="w-full md:w-1/2 p-4 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"
+                            rows="10"
+                            placeholder="Translated text"
+                            readonly
+                        ></textarea>
                     </div>
                     <div class="flex justify-end">
                         <button @click="translateText" class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none">
@@ -81,6 +88,7 @@ const sourceText = ref("");
 const translatedText = ref("");
 const isSwapped = ref(false);
 const isTranslating = ref(false);
+const errorMessage = ref("");
 
 const page = usePage();
 
@@ -97,8 +105,11 @@ const limitText = () => {
     }
 };
 
+const isError = ref(false);
 const translateText = () => {
     isTranslating.value = true;
+    isError.value = false;
+    translatedText.value = "";
     axios.post("/translations", {
         text: sourceText.value,
         sourceLanguage: sourceLanguage.value,
@@ -108,14 +119,12 @@ const translateText = () => {
         translatedText.value = response.data.translatedText;
     })
     .catch(error => {
-        console.error("There was an error translating the text:", error);
-        if (error.response) {
-            console.error("Server responded with status code:", error.response.status);
-            console.error("Response data:", error.response.data);
-        } else if (error.request) {
-            console.error("No response received:", error.request);
+        console.error("Translation error:", error);
+        isError.value = true;
+        if (error.response && error.response.status === 429) {
+            translatedText.value = "Request limit reached, you can no longer perform this action.";
         } else {
-            console.error("Error setting up the request:", error.message);
+            translatedText.value = "There was an error translating the text.";
         }
     })
     .finally(() => {
@@ -130,6 +139,9 @@ const translateText = () => {
 }
 .blinking {
     animation: blinkingText 1.2s infinite;
+}
+.text-red-500 {
+    color: #f56565;
 }
 @keyframes blinkingText {
     0% { opacity: 1; }

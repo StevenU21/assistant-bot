@@ -11,7 +11,7 @@ class RequestLimitExceededException extends Exception
         parent::__construct($message, $code);
     }
 
-    public function render($request)
+    public function render()
     {
         return response()->json(['error' => $this->getMessage()], $this->getCode());
     }
