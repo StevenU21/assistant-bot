@@ -16,7 +16,11 @@ class TranscriptionController extends Controller
 {
     public function index(): Response
     {
-        $transcriptions = Transcription::latest()->paginate(10);
+        $userId = auth()->id();
+        $transcriptions = Transcription::with('user')
+            ->where('user_id', $userId)
+            ->latest()
+            ->paginate(10);
 
         $transcriptions->getCollection()->transform(function ($transcription) {
             $transcription->audioUrl = asset('storage/' . $transcription->audio);

@@ -15,7 +15,11 @@ class SpeechAudioController extends Controller
 {
     public function index(): Response
     {
-        $speechAudios = SpeechAudio::latest()->paginate(10);
+        $userId = auth()->id();
+        $speechAudios = SpeechAudio::with('user')
+            ->where('user_id', $userId)
+            ->latest()
+            ->paginate(10);
 
         $speechAudios->getCollection()->transform(function ($speechAudio) {
             $speechAudio->audioUrl = asset('storage/' . $speechAudio->voice);

@@ -13,7 +13,6 @@ use App\Models\Image;
 class ProcessImage implements ShouldQueue
 {
     use Queueable;
-
     protected $model;
     protected $prompt;
     protected $style;
@@ -57,6 +56,7 @@ class ProcessImage implements ShouldQueue
         Image::create([
             'prompt' => $enhancedPrompt,
             'image_url' => $imagePath,
+            'user_id' => $this->userId
         ]);
 
         // Dispatch event

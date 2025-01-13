@@ -46,6 +46,7 @@ class ProcessSpeechAudio implements ShouldQueue
         SpeechAudio::create([
             'text' => $this->text,
             'voice' => $audioPath,
+            'user_id' => $this->userId
         ]);
         event(new ProcessStatusCompleted($this->userId, 'Audio generated'));
     }

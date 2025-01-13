@@ -14,6 +14,9 @@ return new class extends Migration {
             $table->increments('id');
             $table->string('prompt');
             $table->string('image_url');
+            
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

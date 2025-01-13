@@ -51,6 +51,7 @@ class ProcessTranscription implements ShouldQueue
             'language' => $this->language ?? $response['language'],
             'audio' => $this->filePath, // Guardar la ruta relativa
             'slug' => Str::slug(pathinfo($this->fileName, PATHINFO_FILENAME) . '-' . time()),
+            'user_id' => $this->userId
         ]);
 
         // Despachar evento del fin de la transcripción

@@ -14,7 +14,11 @@ class ImageController extends Controller
 {
     public function index(): Response
     {
-        $images = Image::latest()->paginate(10);
+        $userId = auth()->id();
+        $images = Image::with('user')
+            ->where('user_id', $userId)
+            ->latest()
+            ->paginate(10);
 
         $images->getCollection()->transform(function ($image) {
             $image->imageUrl = asset('storage/' . $image->image_url);
