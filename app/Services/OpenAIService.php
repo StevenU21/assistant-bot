@@ -116,7 +116,7 @@ class OpenAIService
 
     private function getPromptDescription($prompt)
     {
-        $globalInstruction = 'Utiliza el formato Markdown siempre que sea apropiado para enriquecer tus respuestas. Añade líneas de separación, títulos, espaciado y cualquier elemento que ayude a que el contenido se vea limpio y profesional. Evita separar demasiado los párrafos. Si presentas código, utiliza los bloques de Markdown para destacarlo del resto del texto.';
+        $globalInstruction = 'Use Markdown format whenever appropriate to enrich your responses. Add separation lines, titles, spacing, and any elements that help make the content look clean and professional. Avoid separating paragraphs too much. If presenting code, use Markdown blocks to highlight it from the rest of the text.';
 
         $promptDescription = [
             'assistant' => 'You are an AI assistant. Provide helpful responses to user queries.',
