@@ -49,6 +49,14 @@
 
                 <!-- Chat Messages -->
                 <div ref="chatContainer" :class="['border border-gray-300 dark:border-gray-600 rounded-md p-4 h-96 overflow-y-auto mb-4', { blinking: isGenerating }]">
+                    <!-- Initial Prompt Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div v-for="(card, index) in initialPrompts" :key="index" @click="sendInitialPrompt(card)" class="cursor-pointer p-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md shadow-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
+                            <i :class="card.icon" class="text-2xl mb-2"></i>
+                            <div class="font-semibold">{{ card.title }}</div>
+                        </div>
+                    </div>
+
                     <div
                         v-for="(msg, index) in messages"
                         :key="index"
@@ -86,6 +94,10 @@
                                 disabled:opacity-50 disabled:cursor-not-allowed">
                         Send
                     </button>
+                    <button @click="clearChat"
+                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none">
+                        Clear Chat
+                    </button>
                 </div>
                 <div class="text-left text-sm text-gray-400">{{ userInput.length }} / 600</div>
             </div>
@@ -105,18 +117,24 @@ function renderMarkdown(text) {
     return marked(text || '');
 }
 
-const selectedModel = ref("gpt-3.5-turbo");
-const temperature = ref(0.7);
+const selectedModel = ref("gpt-4o-mini");
+const temperature = ref(0.5);
 const prompt = ref("assistant");
 const userInput = ref("");
-const messages = ref([
-    { sender: "bot", text: "Hello, I am the bot." },
-    { sender: "user", text: "Hello, Bot." },
-]);
+const messages = ref([]);
 const isGenerating = ref(false);
 const chatContainer = ref(null);
 
 const errorMessage = ref("");
+
+const initialPrompts = [
+    { title: "Explicación de código PHP", text: "Explica cómo hacer una función recursiva en PHP." },
+    { title: "Resumen de 'Cien años de soledad'", text: "Haz un resumen de 'Cien años de soledad' destacando los puntos importantes." },
+    { title: "Plan para una salida divertida", text: "Proporciona un plan para una salida divertida con amigos." },
+    { title: "Consejos para mejorar hábitos", text: "Dame consejos para mejorar mis hábitos." },
+    { title: "Analisis de Mushoku Tensei", text: "Has un resumen de la obra japonesa Mushoku Tensei, destacando punto importante, el protagonista, los simbolismos y los personajes"},
+    { title: "Guia de Estudio para Laravel", text: "Dame una guia de estudio completa paso a paso para aprender el framework laravel, desde lo mas basico hasta lo mas avanzado, con el fin de tenes los conocimientos necesarios para un entorno laboral" },
+];
 
 const scrollToBottom = async () => {
     await nextTick();
@@ -189,7 +207,17 @@ const sendMessage = async () => {
     messageInput.value.focus(); // Set focus back to input
     scrollToBottom();
 };
+
+const sendInitialPrompt = async (card) => {
+    userInput.value = card.text;
+    await sendMessage();
+};
+
+const clearChat = () => {
+    messages.value = [];
+};
 </script>
+
 <style scoped>
     .message {
         word-wrap: break-word;
