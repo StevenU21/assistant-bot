@@ -23,7 +23,7 @@ class ImageRequest extends FormRequest
     {
         return [
             'model' => ['required', 'string', 'in:dall-e-2,dall-e-3'],
-            'prompt' => ['required', 'string', 'min:12', 'max:300'],
+            'prompt' => ['required', 'string', 'min:8', 'max:300'],
             'style' => ['required', 'string', 'in:realistic,anime,cartoon,futuristic,abstract'],
             'size' => ['required', 'string', 'in:256x256,512x512,1024x1024,1024x1792,1792x1024'],
             'quality' => ['string', 'in:standard,hd'],

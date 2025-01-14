@@ -80,7 +80,7 @@
 
         <!-- Modal for Form -->
         <Modal :show="showModal" @close="showModal = false">
-            <Form :submitAction="submitForm" buttonText="Generate Image" :errors="errors" />
+            <Form :submitAction="submitForm" buttonText="Generate Image" :errors="errors" :isProgressing="isProgressing" />
         </Modal>
 
         <!-- Modal for Viewing Image -->
@@ -121,7 +121,6 @@ const showModal = ref(false);
 const showImageModal = ref(false);
 const selectedImage = ref(null);
 const errors = ref({});
-const isProgressing = ref(false);
 
 const truncate = (text, length) => {
     if (text.length <= length) {
@@ -170,22 +169,28 @@ const openImageModal = (image) => {
     showImageModal.value = true;
 };
 
+const isProgressing = ref(false);
+
 const submitForm = (formData) => {
+    isProgressing.value = true;
     router.post(route("images.store"), formData, {
         preserveScroll: true,
         onSuccess: () => {
             showModal.value = false;
-            getRequestCount(); // Update request count after form submission
+            isProgressing.value = false;
+            getRequestCount();
         },
         onError: (error) => {
-            if (error.response.status === 429) {
-                Swal.fire(
-                    "Error!",
-                    error.response.data.message,
-                    "error"
-                );
+            isProgressing.value = false;
+            if (error.response) {
+                if (error.response.status === 429) {
+                    Swal.fire("Error!", error.response.data.message, "error");
+                } else {
+                    errors.value = error.response.data.errors;
+                }
             } else {
-                errors.value = error.response.data.errors;
+                Swal.fire("Error!", "Ocurrió un error inesperado. Por favor, intenta nuevamente.", "error");
+                console.error("Error sin respuesta:", error);
             }
         },
     });
