@@ -48,48 +48,42 @@ onMounted(() => {
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Dashboard
+                                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('transcriptions.index')"
-                                    :active="
-                                        route().current('transcriptions.index')
-                                    "
+                                    :active="route().current('transcriptions.index')"
                                 >
-                                    Transcriptions
+                                    <i class="fas fa-file-alt mr-2"></i> Transcriptions
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('translations.index')"
-                                    :active="
-                                        route().current('translations.index')
-                                    "
+                                    :active="route().current('translations.index')"
                                 >
-                                    Translations
+                                    <i class="fas fa-language mr-2"></i> Translations
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('speech_audios.index')"
-                                    :active="
-                                        route().current('speech_audios.index')
-                                    "
+                                    :active="route().current('speech_audios.index')"
                                 >
-                                    Speech_Audios
+                                    <i class="fas fa-microphone-alt mr-2"></i> Speech Audios
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('images.index')"
                                     :active="route().current('images.index')"
                                 >
-                                    Images
+                                    <i class="fas fa-image mr-2"></i> Images
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('chatbot.index')"
                                     :active="route().current('chatbot.index')"
                                 >
-                                    ChatBot
+                                    <i class="fas fa-comments mr-2"></i> ChatBot
                                 </NavLink>
                             </div>
                         </div>
@@ -105,36 +99,19 @@ onMounted(() => {
                                                 type="button"
                                                 class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
                                             >
+                                                <i class="fas fa-user mr-2"></i>
                                                 {{ $page.props.auth.user.name }}
-
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
+                                                <i class="fas fa-chevron-down ms-2"></i>
                                             </button>
                                         </span>
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink
-                                            :href="route('profile.edit')"
-                                        >
-                                            Profile
+                                        <DropdownLink :href="route('profile.edit')">
+                                            <i class="fas fa-user mr-2"></i> Profile
                                         </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
+                                        <DropdownLink :href="route('logout')" method="post" as="button">
+                                            <i class="fas fa-sign-out-alt mr-2"></i> Log Out
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -197,42 +174,42 @@ onMounted(() => {
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
-                            Dashboard
+                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink
                             :href="route('transcriptions.index')"
                             :active="route().current('transcriptions.index')"
                         >
-                            Transcriptions
+                            <i class="fas fa-file-alt mr-2"></i> Transcriptions
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink
                             :href="route('translations.index')"
                             :active="route().current('translations.index')"
                         >
-                            Translations
+                            <i class="fas fa-language mr-2"></i> Translations
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink
                             :href="route('speech_audios.index')"
                             :active="route().current('speech_audios.index')"
                         >
-                            Speech_Audios
+                            <i class="fas fa-microphone-alt mr-2"></i> Speech Audios
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink
                             :href="route('images.index')"
                             :active="route().current('images.index')"
                         >
-                            Images
+                            <i class="fas fa-image mr-2"></i> Images
                         </ResponsiveNavLink>
 
                         <ResponsiveNavLink
                             :href="route('chatbot.index')"
                             :active="route().current('chatbot.index')"
                         >
-                            ChatBot
+                            <i class="fas fa-comments mr-2"></i> ChatBot
                         </ResponsiveNavLink>
                     </div>
 

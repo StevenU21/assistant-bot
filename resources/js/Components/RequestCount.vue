@@ -1,14 +1,14 @@
 <template>
   <div class="relative ms-3" ref="dropdown">
     <span
-      @click="toggleDropdown"
-      :class="{
-        'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer': true,
-        'bg-red-100 text-red-800': requestCount === 0,
-        'bg-gray-700 text-white': requestCount > 0
-      }"
+        @click="toggleDropdown"
+        :class="{
+            'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer': true,
+            'bg-red-100 text-red-800': requestCount === 0,
+            'bg-gray-700 text-white': requestCount > 0
+        }"
     >
-      Requests left: {{ requestCount }}
+        <i class="fas fa-clock mr-2"></i> Requests left: {{ requestCount }}
     </span>
     <div v-if="dropdownOpen" class="absolute mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
       <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">

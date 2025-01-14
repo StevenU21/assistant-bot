@@ -62,7 +62,7 @@
                             class="p-3 rounded-md max-w-lg md:max-w-xl"
                         >
                             <div v-html="msg.text ? renderMarkdown(msg.text) : ''"></div>
-                                <button v-if="msg.isComplete" @click="downloadResponse(msg.text)" class="mt-2 px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center">
+                                <button v-if="msg.isComplete" @click="downloadResponse(msg.text)" class="mt-2 px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center">
                                 <i class="fas fa-download mr-2"></i> Descargar Respuesta
                             </button>
                         </div>
@@ -88,13 +88,13 @@
                             placeholder="Write your Message..."></textarea>
                     <button @click="sendMessage"
                             :disabled="isGenerating"
-                            class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none
+                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none
                                 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
                         <i class="fas fa-paper-plane mr-2"></i> Send
                     </button>
                     <button @click="clearChat"
                             :disabled="isGenerating"
-                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none
+                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none
                                 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
                         <i class="fas fa-trash-alt mr-2"></i> Clear Chat
                     </button>
