@@ -37,14 +37,8 @@ class ProcessTranscription implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(OpenAIService $openAIService)
+     public function handle(OpenAIService $openAIService)
     {
-        // Obtener la ruta completa del archivo en el sistema
-        $absoluteFilePath = Storage::disk('public')->path($this->filePath);
-
-        // Procesar la transcripción
-        $response = $openAIService->transcribe($absoluteFilePath, $this->language);
-
         // Get user name and create slug
         $user = User::find($this->userId);
         $userNameSlug = Str::slug($user->name . '-' . $user->id, '-');
@@ -55,6 +49,13 @@ class ProcessTranscription implements ShouldQueue
             Storage::disk('public')->makeDirectory($userDirectory);
         }
 
+        // Move audio file to user-specific directory
+        $userAudioPath = $userDirectory . '/' . basename($this->filePath);
+        Storage::disk('public')->move($this->filePath, $userAudioPath);
+
+        // Procesar la transcripción
+        $response = $openAIService->transcribe(Storage::disk('public')->path($userAudioPath), $this->language);
+
         // Save transcription file to user-specific directory
         $transcriptionPath = $userDirectory . '/' . uniqid() . '.txt';
         Storage::disk('public')->put($transcriptionPath, $response['text']);
@@ -64,7 +65,7 @@ class ProcessTranscription implements ShouldQueue
             'title' => $this->fileName,
             'content' => $response['text'],
             'language' => $this->language ?? $response['language'],
-            'audio' => $this->filePath, // Guardar la ruta relativa
+            'audio' => $userAudioPath, // Guardar la ruta relativa del audio
             'slug' => Str::slug(pathinfo($this->fileName, PATHINFO_FILENAME) . '-' . time()),
             'user_id' => $this->userId
         ]);
