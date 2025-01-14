@@ -107,7 +107,7 @@ import { Head } from "@inertiajs/vue3";
 import { ref, watch, nextTick, onMounted } from "vue";
 import axios from "axios";
 import { marked } from 'marked';
-import eventBus from "@/Components/eventBus.js"; // Import the event bus
+import eventBus from "@/Components/eventBus.js";
 
 function renderMarkdown(text) {
     return marked(text || '');
