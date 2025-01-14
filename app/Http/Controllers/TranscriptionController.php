@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Parsedown;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ProcessTranscription;
 use Illuminate\Support\Facades\Auth;
@@ -69,9 +70,12 @@ class TranscriptionController extends Controller
 
     private function generatePdf(Transcription $transcription)
     {
+        $parsedown = new Parsedown();
+        $htmlContent = $parsedown->text($transcription->content);
+
         $data = [
             'title' => $transcription->title,
-            'content' => $transcription->content,
+            'content' => $htmlContent,
             'language' => $transcription->language,
         ];
 

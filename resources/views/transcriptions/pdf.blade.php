@@ -46,7 +46,7 @@
         <h1>{{ $title }}</h1>
     </div>
     <div class="content">
-        <p>{{ $content }}</p>
+    <div>{!! $content !!}</div>
     </div>
     <div class="language">
         <p>Language: {{ $language }}</p>
