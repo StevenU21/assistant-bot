@@ -16,9 +16,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Model
                         </label>
-                        <select v-model="selectedModel"
-                                class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700
-                                       text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
+                        <select v-model="selectedModel" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
                             <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                             <option value="gpt-4o-mini">GPT-4o-mini</option>
                             <option value="gpt-4o">GPT-4o</option>
@@ -28,18 +26,14 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Temperature
                         </label>
-                        <input type="number" step="0.1" min="0" max="1.5" v-model="temperature"
-                               class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700
-                                      text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"/>
+                        <input type="number" step="0.1" min="0" max="1.5" v-model="temperature" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"/>
                     </div>
                     <!-- Prompt as Select -->
                     <div class="flex-1">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Prompt
                         </label>
-                        <select v-model="prompt"
-                                class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700
-                                       text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
+                        <select v-model="prompt" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
                             <option value="assistant">Assistant</option>
                             <option value="grammar_correction">Grammar Correction</option>
                             <option value="sarcastic_response">Sarcastic</option>
@@ -54,9 +48,7 @@
                 </div>
 
                 <!-- Chat Messages -->
-                <div ref="chatContainer"
-                    :class="['border border-gray-300 dark:border-gray-600 rounded-md p-4 h-96 overflow-y-auto mb-4', { blinking: isGenerating }]"
-                    >
+                <div ref="chatContainer" :class="['border border-gray-300 dark:border-gray-600 rounded-md p-4 h-96 overflow-y-auto mb-4', { blinking: isGenerating }]">
                     <div
                         v-for="(msg, index) in messages"
                         :key="index"
@@ -71,8 +63,7 @@
                         <div
                             v-else
                             :class="[ 'message', 'bg-blue-500 text-white' ]"
-                            class="p-3 rounded-md max-w-lg md:max-w-xl"
-                        >
+                            class="p-3 rounded-md max-w-lg md:max-w-xl">
                             {{ msg.text }}
                         </div>
                     </div>
