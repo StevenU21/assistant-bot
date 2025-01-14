@@ -116,7 +116,7 @@ class OpenAIService
 
     private function getPromptDescription($prompt)
     {
-        $globalInstruction = 'Use markdown format whenever you consider it necessary to enrich the text of your responses.';
+        $globalInstruction = 'Use markdown format whenever you consider it necessary to enrich the text of your responses, adding separation lines for the texts, improving headers, line spacing, and elements to enhance the response and make it look clean and professional.';
 
         $promptDescription = [
             'assistant' => 'You are an AI assistant. Provide helpful responses to user queries.',
@@ -132,7 +132,7 @@ class OpenAIService
 
         return ($promptDescription[$prompt] ?? $promptDescription['assistant']) . $globalInstruction;
     }
-    
+
     public function getAIModels(): ListResponse
     {
         $response = OpenAI::models()->list();
