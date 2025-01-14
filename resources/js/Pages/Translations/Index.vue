@@ -122,7 +122,7 @@ const translateText = () => {
         console.error("Translation error:", error);
         isError.value = true;
         if (error.response && error.response.status === 429) {
-            translatedText.value = "Request limit reached, you can no longer perform this action.";
+            translatedText.value = "Error: " + (error.response?.data.message || "Desconocido");
         } else {
             translatedText.value = "There was an error translating the text.";
         }
