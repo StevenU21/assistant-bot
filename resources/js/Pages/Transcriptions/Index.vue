@@ -13,10 +13,7 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-between mb-6">
-                    <Pagination
-                        class="hidden sm:block"
-                        :links="transcriptions.links"
-                    />
+                    <Pagination class="hidden sm:block" :links="transcriptions.links"/>
 
                     <PrimaryButton @click="showModal = true">
                         <i class="fas fa-plus mr-2"></i> Create transcription
@@ -44,25 +41,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    v-if="
-                                        !transcriptions ||
-                                        !transcriptions.data ||
-                                        transcriptions.data.length === 0
-                                    "
-                                >
-                                    <td
-                                        colspan="5"
-                                        class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg"
-                                    >
+                                <tr v-if="!transcriptions || !transcriptions.data || transcriptions.data.length === 0">
+                                    <td colspan="5" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
                                         No transcriptions found.
                                     </td>
                                 </tr>
-                                <tr
-                                    v-else
-                                    v-for="transcription in transcriptions.data"
-                                    :key="transcription.id"
-                                >
+                                <tr v-else v-for="transcription in transcriptions.data" :key="transcription.id">
                                     <td class="text-white px-4 py-2">
                                         {{ transcription.title }}
                                     </td>
@@ -72,74 +56,28 @@
                                         }}
                                     </td>
                                     <td class="text-white px-4 py-2">
-                                        <span
-                                            v-if="
-                                                transcription.language === 'en'
-                                            "
-                                        >
+                                        <span v-if="transcription.language === 'en'">
                                             🇺🇸
                                         </span>
-                                        <span
-                                            v-else-if="
-                                                transcription.language === 'es'
-                                            "
-                                        >
+                                        <span v-else-if="transcription.language === 'es'">
                                             🇪🇸
                                         </span>
                                         {{ transcription.language }}
                                     </td>
-                                    <td
-                                        class="text-white px-4 py-2 space-x-2 text-center"
-                                    >
-                                        <div
-                                            class="flex space-x-2 justify-center"
-                                        >
-                                            <AudioPlayer
-                                                :audioUrl="
-                                                    transcription.audioUrl
-                                                "
-                                                v-model:isPlaying="
-                                                    transcription.isPlaying
-                                                "
-                                            />
+                                    <td class="text-white px-4 py-2 space-x-2 text-center">
+                                        <div class="flex space-x-2 justify-center">
+                                            <AudioPlayer :audioUrl="transcription.audioUrl" v-model:isPlaying="transcription.isPlaying"/>
                                             <DropdownMenu>
-                                                <PrimaryButton
-                                                    @click="
-                                                        viewTranscription(
-                                                            transcription.slug
-                                                        )
-                                                    "
-                                                    class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-eye mr-2"
-                                                    ></i>
+                                                <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left">
+                                                    <i class="fas fa-eye mr-2"></i>
                                                     View PDF
                                                 </PrimaryButton>
-                                                <PrimaryButton
-                                                    @click="
-                                                        downloadTranscription(
-                                                            transcription.slug
-                                                        )
-                                                    "
-                                                    class="bg-green-500 hover:bg-green-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-download mr-2"
-                                                    ></i>
+                                                <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
+                                                    <i class="fas fa-download mr-2"></i>
                                                     Download PDF
                                                 </PrimaryButton>
-                                                <PrimaryButton
-                                                    @click="
-                                                        deletetranscription(
-                                                            transcription.slug
-                                                        )
-                                                    "
-                                                    class="bg-red-500 hover:bg-red-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-trash mr-2"
-                                                    ></i>
+                                                <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left">
+                                                    <i class="fas fa-trash mr-2"></i>
                                                     Delete
                                                 </PrimaryButton>
                                             </DropdownMenu>
@@ -158,11 +96,7 @@
 
         <!-- Modal for Form -->
         <Modal :show="showModal" @close="showModal = false">
-            <Form
-                :submitAction="submitForm"
-                buttonText="Generate Transcription"
-                :errors="errors"
-            />
+            <Form :submitAction="submitForm" buttonText="Generate Transcription" :errors="errors"/>
         </Modal>
     </AuthenticatedLayout>
 </template>
@@ -178,7 +112,7 @@ import Form from "@/Pages/Transcriptions/Form.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, onMounted, watch } from "vue";
-import eventBus from "@/Components/eventBus.js"; // Import the event bus
+import eventBus from "@/Components/eventBus.js"; 
 
 defineProps({
     transcriptions: {
