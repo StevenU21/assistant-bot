@@ -77,7 +77,7 @@
 
                 <div v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</div>
 
-                <div class="flex space-x-2">
+                <div class="flex space-x-2 items-center">
                     <textarea ref="messageInput" rows="2" v-model="userInput"
                             :disabled="isGenerating"
                             @input="limitText"
@@ -88,16 +88,27 @@
                             placeholder="Write your Message..."></textarea>
                     <button @click="sendMessage"
                             :disabled="isGenerating"
-                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none
+                            class="p-6 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none
                                 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
-                        <i class="fas fa-paper-plane mr-2"></i> Send
+                        <i class="fas fa-paper-plane"></i>
                     </button>
-                    <button @click="clearChat"
-                            :disabled="isGenerating"
-                            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none
-                                disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
-                        <i class="fas fa-trash-alt mr-2"></i> Clear Chat
-                    </button>
+                    <DropdownMenu>
+                        <template #trigger>
+                            <button :disabled="isGenerating"
+                                    class="p-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none
+                                        disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </template>
+                        <template #default>
+                            <button @click="clearChat"
+                                    :disabled="isGenerating"
+                                    class="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <i class="fas fa-trash-alt"></i>
+                                <span class="hidden sm:inline"> Clear Chat</span>
+                            </button>
+                        </template>
+                    </DropdownMenu>
                 </div>
                 <div class="text-left text-sm text-gray-400">{{ userInput.length }} / 600</div>
             </div>
@@ -112,6 +123,7 @@ import { ref, watch, nextTick, onMounted } from "vue";
 import axios from "axios";
 import { marked } from 'marked';
 import eventBus from "@/Components/eventBus.js";
+import DropdownMenu from "@/Components/DropdownMenu.vue";
 
 function renderMarkdown(text) {
     return marked(text || '');
