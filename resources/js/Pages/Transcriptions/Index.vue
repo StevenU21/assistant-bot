@@ -22,11 +22,8 @@
                         <i class="fas fa-plus mr-2"></i> Create transcription
                     </PrimaryButton>
                 </div>
-                <!-- Tabla de géneros -->
-                <div
-                    class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
-                >
-                    <div class="overflow-x-auto">
+
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                         <table class="w-full min-w-max">
                             <thead>
                                 <tr>
@@ -151,7 +148,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
                 </div>
 
                 <div class="flex justify-left mb-6 mt-6">
@@ -286,6 +282,7 @@ const page = usePage();
 onMounted(() => {
     window.Echo.channel(`processes.${page.props.auth.user.id}`).listen(
         "ProcessStatusCompleted",
+
         () => {
             updateTranscriptions();
         }

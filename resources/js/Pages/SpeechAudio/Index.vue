@@ -3,9 +3,7 @@
         <Head title="Speech Audio" />
 
         <template #header>
-            <h2
-                class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-            >
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Speech Audios
             </h2>
         </template>
@@ -13,20 +11,14 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex justify-between mb-6">
-                    <Pagination
-                        class="hidden sm:block"
-                        :links="speechAudios.links"
-                    />
+                    <Pagination class="hidden sm:block" :links="speechAudios.links"/>
 
                     <PrimaryButton @click="showModal = true">
                         <i class="fas fa-plus mr-2"></i> Create Speech Audio
                     </PrimaryButton>
                 </div>
-                <!-- Tabla de géneros -->
-                <div
-                    class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
-                >
-                    <div class="overflow-x-auto">
+
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                         <table class="w-full min-w-max">
                             <thead>
                                 <tr>
@@ -47,25 +39,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr
-                                    v-if="
-                                        !speechAudios ||
-                                        !speechAudios.data ||
-                                        speechAudios.data.length === 0
-                                    "
-                                >
-                                    <td
-                                        colspan="5"
-                                        class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg"
-                                    >
+                                <tr v-if="!speechAudios || !speechAudios.data || speechAudios.data.length === 0">
+                                    <td colspan="5" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
                                         No speech audios found.
                                     </td>
                                 </tr>
-                                <tr
-                                    v-else
-                                    v-for="speechAudio in speechAudios.data"
-                                    :key="speechAudio.id"
-                                >
+                                <tr v-else v-for="speechAudio in speechAudios.data" :key="speechAudio.id">
                                     <td class="text-white px-4 py-2">
                                         {{ speechAudio.id }}
                                     </td>
@@ -75,66 +54,23 @@
                                     </td>
 
                                     <td class="text-white px-4 py-2">
-                                        {{
-                                            format(
-                                                new Date(
-                                                    speechAudio.created_at
-                                                ),
-                                                "dd/MM/yyyy HH:mm:ss"
-                                            )
-                                        }}
+                                        {{ format(new Date(speechAudio.created_at),"dd/MM/yyyy HH:mm:ss") }}
                                     </td>
 
-                                    <td
-                                        class="text-white px-4 py-2 space-x-2 text-center"
-                                    >
-                                        <div
-                                            class="flex space-x-2 justify-center"
-                                        >
-                                            <AudioPlayer
-                                                :audioUrl="speechAudio.audioUrl"
-                                                v-model:isPlaying="
-                                                    speechAudio.isPlaying
-                                                "
-                                            />
+                                    <td class="text-white px-4 py-2 space-x-2 text-center">
+                                        <div class="flex space-x-2 justify-center">
+                                            <AudioPlayer :audioUrl="speechAudio.audioUrl" v-model:isPlaying=" speechAudio.isPlaying"/>
                                             <DropdownMenu>
-                                                <PrimaryButton
-                                                    @click="
-                                                        downloadText(
-                                                            speechAudio.id
-                                                        )
-                                                    "
-                                                    class="bg-green-500 hover:bg-green-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-download mr-2"
-                                                    ></i>
+                                                <PrimaryButton @click="downloadText(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
+                                                    <i class="fas fa-download mr-2"></i>
                                                     Download Text
                                                 </PrimaryButton>
-                                                <PrimaryButton
-                                                    @click="
-                                                        downloadSpeechAudio(
-                                                            speechAudio.id
-                                                        )
-                                                    "
-                                                    class="bg-green-500 hover:bg-green-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-download mr-2"
-                                                    ></i>
+                                                <PrimaryButton @click="downloadSpeechAudio(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
+                                                    <i class="fas fa-download mr-2"></i>
                                                     Download Audio
                                                 </PrimaryButton>
-                                                <PrimaryButton
-                                                    @click="
-                                                        deleteSpeechAudio(
-                                                            speechAudio.id
-                                                        )
-                                                    "
-                                                    class="bg-red-500 hover:bg-red-700 text-white w-full text-left"
-                                                >
-                                                    <i
-                                                        class="fas fa-trash mr-2"
-                                                    ></i>
+                                                <PrimaryButton @click="deleteSpeechAudio(speechAudio.id)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left">
+                                                    <i class="fas fa-trash mr-2"></i>
                                                     Delete
                                                 </PrimaryButton>
                                             </DropdownMenu>
@@ -143,7 +79,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
                 </div>
 
                 <div class="flex justify-left mb-6 mt-6">
@@ -154,15 +89,9 @@
 
         <!-- Modal for Form -->
         <Modal :show="showModal" @close="showModal = false">
-            <Form
-                :submitAction="submitForm"
-                buttonText="Generate Speech Audio"
-                :errors="errors"
-            />
+            <Form :submitAction="submitForm" buttonText="Generate Speech Audio" :errors="errors"/>
         </Modal>
 
-        <!-- Speech Audio Progress Animation -->
-        <!-- <SpeechAudioProgress ref="speechAudioProgress" id="speech-audio-progress" /> -->
     </AuthenticatedLayout>
 </template>
 
