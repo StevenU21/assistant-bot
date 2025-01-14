@@ -13,8 +13,8 @@
                 <!-- Model, Temperature, Prompt -->
                 <div class="flex flex-col md:flex-row gap-4 mb-6">
                     <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Model
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 flex items-center">
+                            <i class="fas fa-robot mr-2"></i> Model
                         </label>
                         <select v-model="selectedModel" :disabled="isGenerating" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
                             <option v-for="model in modelOptions" :key="model.value" :value="model.value">
@@ -23,15 +23,15 @@
                         </select>
                     </div>
                     <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Temperature
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 flex items-center">
+                            <i class="fas fa-thermometer-half mr-2"></i> Temperature
                         </label>
                         <input type="number" step="0.1" min="0" max="1.5" v-model="temperature" :disabled="isGenerating" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"/>
                     </div>
                     <!-- Prompt as Select -->
                     <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                            Prompt
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 flex items-center">
+                            <i class="fas fa-keyboard mr-2"></i> Prompt
                         </label>
                         <select v-model="prompt" @change="sendPrompt" :disabled="isGenerating" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
                             <option v-for="option in promptOptions" :key="option.value" :value="option.value">
@@ -55,13 +55,17 @@
                         v-for="(msg, index) in messages"
                         :key="index"
                         :class="['mb-2 flex', msg.sender === 'bot' ? 'justify-start' : 'justify-end']"
-                        >
+                    >
                         <div
                             v-if="msg.sender === 'bot'"
-                            v-html="msg.text ? renderMarkdown(msg.text) : ''"
                             :class="[ 'message', 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200' ]"
                             class="p-3 rounded-md max-w-lg md:max-w-xl"
-                        />
+                        >
+                            <div v-html="msg.text ? renderMarkdown(msg.text) : ''"></div>
+                                <button v-if="msg.isComplete" @click="downloadResponse(msg.text)" class="mt-2 px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center">
+                                <i class="fas fa-download mr-2"></i> Descargar Respuesta
+                            </button>
+                        </div>
                         <div
                             v-else
                             :class="[ 'message', 'bg-blue-500 text-white' ]"
@@ -85,14 +89,14 @@
                     <button @click="sendMessage"
                             :disabled="isGenerating"
                             class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none
-                                disabled:opacity-50 disabled:cursor-not-allowed">
-                        Send
+                                disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Send
                     </button>
                     <button @click="clearChat"
                             :disabled="isGenerating"
                             class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none
-                                disabled:opacity-50 disabled:cursor-not-allowed">
-                        Clear Chat
+                                disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                        <i class="fas fa-trash-alt mr-2"></i> Clear Chat
                     </button>
                 </div>
                 <div class="text-left text-sm text-gray-400">{{ userInput.length }} / 600</div>
@@ -112,6 +116,15 @@ import eventBus from "@/Components/eventBus.js";
 function renderMarkdown(text) {
     return marked(text || '');
 }
+
+const downloadResponse = (text) => {
+    const title = text.split(' ').slice(0, 5).join('_'); // Generate a dynamic title
+    const blob = new Blob([text], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${title}.txt`;
+    link.click();
+};
 
 const selectedModel = ref("gpt-3.5-turbo");
 const temperature = ref(0.5);
@@ -205,7 +218,7 @@ const sendMessage = async () => {
     isGenerating.value = true;
 
     // Temporary message while bot is responding
-    const placeholderMsg = { sender: "bot", text: "The bot is typing" };
+    const placeholderMsg = { sender: "bot", text: "The bot is typing", isComplete: false };
     messages.value.push(placeholderMsg);
     await scrollToBottom();
 
@@ -217,10 +230,12 @@ const sendMessage = async () => {
             temperature: temperature.value,
         });
         placeholderMsg.text = data.bot_message;
+        placeholderMsg.isComplete = true; // Mark the message as complete
         getRequestCount(); // Update request count after sending message
     } catch (err) {
         if (err.response?.status === 429) {
             placeholderMsg.text = "Error: " + (err.response?.data.message);
+            placeholderMsg.isComplete = true; // Mark the message as complete even on error
         }
     }
 
