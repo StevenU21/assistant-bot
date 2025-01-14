@@ -21,71 +21,71 @@
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                        <table class="w-full min-w-max">
-                            <thead>
-                                <tr>
+                    <table class="w-full min-w-max">
+                        <thead>
+                            <tr>
+                                <th class="text-white p-4 text-left">
+                                    <i class="fas fa-font mr-2"></i>
+                                    <span class="hidden sm:inline">Title</span>
+                                </th>
+                                <th class="text-white p-4 text-left hidden sm:table-cell">
+                                    <i class="fas fa-align-left mr-2"></i>
+                                    <span class="hidden sm:inline">Content</span>
+                                </th>
                                     <th class="text-white p-4 text-left">
-                                        <i class="fas fa-font mr-2"></i>Title
-                                    </th>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-align-left mr-2"></i
-                                        >Content
-                                    </th>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-calendar-alt mr-2"></i
-                                        >Language
-                                    </th>
-                                    <th class="text-white p-4">
-                                        <i class="fas fa-cogs mr-2"></i>Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-if="!transcriptions || !transcriptions.data || transcriptions.data.length === 0">
-                                    <td colspan="5" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
-                                        No transcriptions found.
-                                    </td>
-                                </tr>
-                                <tr v-else v-for="transcription in transcriptions.data" :key="transcription.id">
-                                    <td class="text-white px-4 py-2">
-                                        {{ transcription.title }}
-                                    </td>
-                                    <td class="text-white px-4 py-2">
-                                        {{
-                                            truncate(transcription.content, 30)
-                                        }}
-                                    </td>
-                                    <td class="text-white px-4 py-2">
-                                        <span v-if="transcription.language === 'en'">
-                                            🇺🇸
-                                        </span>
-                                        <span v-else-if="transcription.language === 'es'">
-                                            🇪🇸
-                                        </span>
-                                        {{ transcription.language }}
-                                    </td>
-                                    <td class="text-white px-4 py-2 space-x-2 text-center">
-                                        <div class="flex space-x-2 justify-center">
+                                    <i class="fas fa-globe mr-2"></i>
+                                    <span class="hidden sm:inline">Language</span>
+                                </th>
+                                <th class="text-white p-4">
+                                    <i class="fas fa-cogs mr-2"></i>
+                                    <span class="hidden sm:inline">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="!transcriptions || !transcriptions.data || transcriptions.data.length === 0">
+                                <td colspan="4" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
+                                    No transcriptions found.
+                                </td>
+                            </tr>
+                            <tr v-else v-for="transcription in transcriptions.data" :key="transcription.id">
+                                <td class="text-white px-4 py-2">
+                                    {{ truncate(transcription.title, 12) }}
+                                </td>
+                                <td class="text-white px-4 py-2 hidden sm:table-cell">
+                                    {{ truncate(transcription.content, 30) }}
+                                </td>
+                                <td class="text-white px-4 py-2">
+                                    <span v-if="transcription.language === 'en'">
+                                        🇺🇸
+                                    </span>
+                                    <span v-else-if="transcription.language === 'es'">
+                                        🇪🇸
+                                    </span>
+                                    {{ transcription.language }}
+                                </td>
+                                    <td class="text-white px-2 py-2 space-x-2 text-center">
+                                        <div class="flex space-x-1 justify-center">
                                             <AudioPlayer :audioUrl="transcription.audioUrl" v-model:isPlaying="transcription.isPlaying"/>
                                             <DropdownMenu>
-                                                <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left">
-                                                    <i class="fas fa-eye mr-2"></i>
-                                                    View PDF
+                                                <PrimaryButton @click="viewTranscription(transcription.slug)" class="bg-blue-500 hover:bg-blue-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                    <i class="fas fa-eye mr-1 sm:mr-2"></i>
+                                                    <span class="hidden sm:inline">View PDF</span>
                                                 </PrimaryButton>
-                                                <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
-                                                    <i class="fas fa-download mr-2"></i>
-                                                    Download PDF
+                                                <PrimaryButton @click="downloadTranscription(transcription.slug)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                    <i class="fas fa-download mr-1 sm:mr-2"></i>
+                                                    <span class="hidden sm:inline">Download PDF</span>
                                                 </PrimaryButton>
-                                                <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left">
-                                                    <i class="fas fa-trash mr-2"></i>
-                                                    Delete
+                                                <PrimaryButton @click="deletetranscription(transcription.slug)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                    <i class="fas fa-trash mr-1 sm:mr-2"></i>
+                                                    <span class="hidden sm:inline">Delete</span>
                                                 </PrimaryButton>
                                             </DropdownMenu>
                                         </div>
                                     </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="flex justify-left mb-6 mt-6">
@@ -112,7 +112,7 @@ import Form from "@/Pages/Transcriptions/Form.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, onMounted, watch } from "vue";
-import eventBus from "@/Components/eventBus.js"; 
+import eventBus from "@/Components/eventBus.js";
 
 defineProps({
     transcriptions: {

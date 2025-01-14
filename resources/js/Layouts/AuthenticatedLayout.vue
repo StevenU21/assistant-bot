@@ -160,7 +160,9 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-
+                <div class="block sm:hidden">
+                    <RequestCount />
+                </div>
                 <!-- Responsive Navigation Menu -->
                 <div
                     :class="{
@@ -169,7 +171,9 @@ onMounted(() => {
                     }"
                     class="sm:hidden"
                 >
+
                     <div class="space-y-1 pb-3 pt-2">
+
                         <ResponsiveNavLink
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"

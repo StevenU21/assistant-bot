@@ -1,8 +1,8 @@
 <template>
     <div>
         <PrimaryButton @click="toggleAudio" :class="buttonClass">
-            <i :class="iconClass" class="mr-2"></i>
-            {{ isPlaying ? 'Pause' : 'Play' }} Audio
+            <i :class="iconClass" class="mr-0 sm:mr-2"></i>
+            <span class="hidden sm:inline">{{ isPlaying ? 'Pause' : 'Play' }} Audio</span>
         </PrimaryButton>
     </div>
 </template>
@@ -28,7 +28,7 @@ const emit = defineEmits(['update:isPlaying']);
 const audio = ref(null);
 const isPlaying = ref(props.isPlaying);
 
-const buttonClass = ref('bg-yellow-500 hover:bg-yellow-700 text-white');
+const buttonClass = ref(`${isPlaying.value ? 'bg-red-500' : 'bg-green-500'} `);
 const iconClass = ref(isPlaying.value ? 'fas fa-pause' : 'fas fa-play');
 
 const toggleAudio = () => {
@@ -72,12 +72,14 @@ onUnmounted(() => {
 
 watch(isPlaying, (newVal) => {
     iconClass.value = newVal ? 'fas fa-pause' : 'fas fa-play';
+    buttonClass.value = `${newVal ? 'bg-red-500' : 'bg-green-500'} p-1 sm:px-2 sm:py-1`;
 });
 
 watch(currentPlaying, (newVal) => {
     if (newVal !== audio.value) {
         isPlaying.value = false;
         iconClass.value = 'fas fa-play';
+        buttonClass.value = 'bg-green-500 p-1 sm:px-2 sm:py-1';
     }
 });
 </script>
