@@ -62,6 +62,6 @@ onBeforeUnmount(() => {
 }
 
 .dropdown-content > *:not(:last-child) {
-    margin-bottom: 0.2rem; /* Adjust the margin as needed */
+    margin-bottom: 0.2rem;
 }
 </style>
