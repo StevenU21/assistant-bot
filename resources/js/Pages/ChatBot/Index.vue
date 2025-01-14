@@ -138,7 +138,7 @@ const downloadResponse = (text) => {
     link.click();
 };
 
-const selectedModel = ref("gpt-3.5-turbo");
+const selectedModel = ref("gpt-4o-mini");
 const temperature = ref(0.5);
 const prompt = ref("assistant");
 const userInput = ref("");
