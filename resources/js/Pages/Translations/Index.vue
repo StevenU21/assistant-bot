@@ -122,7 +122,7 @@ const translateText = () => {
         console.error("Translation error:", error);
         isError.value = true;
         if (error.response && error.response.status === 429) {
-            translatedText.value = "Error: " + (error.response?.data.message || "Desconocido");
+            translatedText.value = "Error: " + (error.response?.data.message);
         } else {
             translatedText.value = "There was an error translating the text.";
         }
