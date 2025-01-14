@@ -12,12 +12,22 @@
     </span>
     <div v-if="dropdownOpen" class="absolute mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
       <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-        <button @click="resetCount" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>
-          </svg>
-          Reset
-        </button>
+        <template v-if="userId === 1">
+          <button
+            @click="resetCount"
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>
+            </svg>
+            Reset
+          </button>
+        </template>
+        <template v-else>
+          <span class="block w-full text-left px-4 py-2 text-sm text-gray-700 flex items-center">
+            Próximamente...
+          </span>
+        </template>
       </div>
     </div>
   </div>
@@ -33,7 +43,8 @@ export default {
   data() {
     return {
       dropdownOpen: false,
-      requestCount: this.$page.props.auth.user.user_request.request_count
+      requestCount: this.$page.props.auth.user.user_request.request_count,
+      userId: this.$page.props.auth.user.id // Add userId to data
     };
   },
   methods: {
@@ -41,6 +52,7 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
     },
     async resetCount() {
+      if (this.userId !== 1) return; // Check if userId is 1
       try {
         const response = await axios.patch('/user/request_count');
         if (response.status === 200) {

@@ -14,8 +14,8 @@ const showingNavigationDropdown = ref(false);
 const page = usePage();
 
 onMounted(() => {
-    const userIdMeta = document.createElement('meta');
-    userIdMeta.name = 'user-id';
+    const userIdMeta = document.createElement("meta");
+    userIdMeta.name = "user-id";
     userIdMeta.content = page.props.auth.user.id;
     document.head.appendChild(userIdMeta);
 });
@@ -41,45 +41,54 @@ onMounted(() => {
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
                                 <NavLink
                                     :href="route('dashboard')"
-                                    :active="route().current('dashboard')">
+                                    :active="route().current('dashboard')"
+                                >
                                     Dashboard
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('transcriptions.index')"
                                     :active="
-                                        route().current('transcriptions.index')">
+                                        route().current('transcriptions.index')
+                                    "
+                                >
                                     Transcriptions
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('translations.index')"
                                     :active="
-                                        route().current('translations.index')">
+                                        route().current('translations.index')
+                                    "
+                                >
                                     Translations
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('speech_audios.index')"
                                     :active="
-                                        route().current('speech_audios.index')">
+                                        route().current('speech_audios.index')
+                                    "
+                                >
                                     Speech_Audios
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('images.index')"
-                                    :active="
-                                        route().current('images.index')">
+                                    :active="route().current('images.index')"
+                                >
                                     Images
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('chatbot.index')"
-                                    :active="
-                                        route().current('chatbot.index')">
+                                    :active="route().current('chatbot.index')"
+                                >
                                     ChatBot
                                 </NavLink>
                             </div>
@@ -190,6 +199,41 @@ onMounted(() => {
                         >
                             Dashboard
                         </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :href="route('transcriptions.index')"
+                            :active="route().current('transcriptions.index')"
+                        >
+                            Transcriptions
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :href="route('translations.index')"
+                            :active="route().current('translations.index')"
+                        >
+                            Translations
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :href="route('speech_audios.index')"
+                            :active="route().current('speech_audios.index')"
+                        >
+                            Speech_Audios
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :href="route('images.index')"
+                            :active="route().current('images.index')"
+                        >
+                            Images
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            :href="route('chatbot.index')"
+                            :active="route().current('chatbot.index')"
+                        >
+                            ChatBot
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -238,7 +282,8 @@ onMounted(() => {
                 <slot />
             </main>
 
-            <ProcessManager /> <!-- Mover aquí -->
+            <ProcessManager />
+            <!-- Mover aquí -->
         </div>
     </div>
 </template>
