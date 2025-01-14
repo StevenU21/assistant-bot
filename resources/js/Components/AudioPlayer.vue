@@ -72,14 +72,14 @@ onUnmounted(() => {
 
 watch(isPlaying, (newVal) => {
     iconClass.value = newVal ? 'fas fa-pause' : 'fas fa-play';
-    buttonClass.value = `${newVal ? 'bg-red-500' : 'bg-green-500'} p-1 sm:px-2 sm:py-1`;
+    buttonClass.value = `${newVal ? 'bg-red-500' : 'bg-green-500'}`;
 });
 
 watch(currentPlaying, (newVal) => {
     if (newVal !== audio.value) {
         isPlaying.value = false;
         iconClass.value = 'fas fa-play';
-        buttonClass.value = 'bg-green-500 p-1 sm:px-2 sm:py-1';
+        buttonClass.value = 'bg-green-500';
     }
 });
 </script>
