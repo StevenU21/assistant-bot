@@ -55,7 +55,6 @@
                             Translate
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -67,6 +66,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 import axios from "axios";
+import eventBus from "@/Components/eventBus.js"; // Import the event bus
 
 const languages = [
     { value: "en", label: "English" },
@@ -89,6 +89,7 @@ const translatedText = ref("");
 const isSwapped = ref(false);
 const isTranslating = ref(false);
 const errorMessage = ref("");
+const requestCount = ref(0);
 
 const page = usePage();
 
@@ -106,6 +107,17 @@ const limitText = () => {
 };
 
 const isError = ref(false);
+
+const getRequestCount = async () => {
+    try {
+        const response = await axios.get('/user/request_count');
+        requestCount.value = response.data.request_count;
+        eventBus.emit('requestCountUpdated', requestCount.value); // Emit the event
+    } catch (error) {
+        console.error("Error fetching request count:", error);
+    }
+};
+
 const translateText = () => {
     isTranslating.value = true;
     isError.value = false;
@@ -117,6 +129,7 @@ const translateText = () => {
     })
     .then(response => {
         translatedText.value = response.data.translatedText;
+        getRequestCount(); // Update request count after translation
     })
     .catch(error => {
         console.error("Translation error:", error);
@@ -131,8 +144,10 @@ const translateText = () => {
         isTranslating.value = false;
     });
 };
-</script>
 
+// Fetch initial request count when component is mounted
+getRequestCount();
+</script>
 <style scoped>
 .rotate-180 {
     transform: rotate(180deg);

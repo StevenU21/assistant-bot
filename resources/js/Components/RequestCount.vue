@@ -16,7 +16,7 @@
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>
           </svg>
-          Reestablecer
+          Reset
         </button>
       </div>
     </div>
@@ -24,25 +24,41 @@
 </template>
 
 <script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import eventBus from "./eventBus.js"; // Import the event bus
+
 export default {
   name: 'RequestCount',
   data() {
     return {
-      dropdownOpen: false
+      dropdownOpen: false,
+      requestCount: this.$page.props.auth.user.user_request.request_count
     };
-  },
-  computed: {
-    requestCount() {
-      return this.$page.props.auth.user.user_request.request_count;
-    }
   },
   methods: {
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
     },
-    resetCount() {
-      // Lógica para reestablecer el conteo
-      console.log('Reestablecer conteo');
+    async resetCount() {
+      try {
+        const response = await axios.patch('/user/request_count');
+        if (response.status === 200) {
+          const updatedResponse = await axios.get('/user/request_count');
+          this.requestCount = updatedResponse.data.request_count; // Update the value of requestCount with the response from the server
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'The request count has been reset to 10.',
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'There was a problem resetting the request count.',
+        });
+      }
     },
     handleClickOutside(event) {
       if (this.$refs.dropdown && !this.$refs.dropdown.contains(event.target)) {
@@ -52,9 +68,13 @@ export default {
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside);
+    eventBus.on('requestCountUpdated', (newCount) => {
+      this.requestCount = newCount; // Update the request count when the event is received
+    });
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handleClickOutside);
+    eventBus.off('requestCountUpdated'); // Remove the event listener
   }
 };
 </script>

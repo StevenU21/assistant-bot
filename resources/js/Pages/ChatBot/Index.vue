@@ -108,6 +108,7 @@ import { Head } from "@inertiajs/vue3";
 import { ref, watch, nextTick, onMounted } from "vue";
 import axios from "axios";
 import { marked } from 'marked';
+import eventBus from "@/Components/eventBus.js"; // Import the event bus
 
 function renderMarkdown(text) {
     return marked(text || '');
@@ -118,8 +119,8 @@ const temperature = ref(0.7);
 const prompt = ref("assistant");
 const userInput = ref("");
 const messages = ref([
-    { sender: "bot", text: "Hola, soy el bot." },
-    { sender: "user", text: "Hola, Bot." },
+    { sender: "bot", text: "Hello, I am the bot." },
+    { sender: "user", text: "Hello, Bot." },
 ]);
 const isGenerating = ref(false);
 const chatContainer = ref(null);
@@ -144,27 +145,36 @@ const limitText = () => {
 
 const messageInput = ref(null);
 
+const getRequestCount = async () => {
+    try {
+        const response = await axios.get('/user/request_count');
+        eventBus.emit('requestCountUpdated', response.data.request_count); // Emit the event
+    } catch (error) {
+        console.error("Error fetching request count:", error);
+    }
+};
+
 const sendMessage = async () => {
     errorMessage.value = "";
     if (userInput.value.trim().length < 4) {
-        errorMessage.value = "Mínimo 4 caracteres.";
+        errorMessage.value = "Minimum 4 characters.";
         return;
     }
     if (userInput.value.trim().length > 600) {
-        errorMessage.value = "Máximo 600 caracteres.";
+        errorMessage.value = "Maximum 600 characters.";
         return;
     }
     if (!userInput.value.trim() || isGenerating.value) return;
 
-    // Enviar mensaje del usuario
+    // Send user message
     messages.value.push({ sender: "user", text: userInput.value });
     userInput.value = ""; // Clear input immediately
     await scrollToBottom(); // Scroll after adding user message
 
     isGenerating.value = true;
 
-    // Mensaje temporal mientras el bot responde
-    const placeholderMsg = { sender: "bot", text: "El bot está escribiendo" };
+    // Temporary message while bot is responding
+    const placeholderMsg = { sender: "bot", text: "The bot is typing" };
     messages.value.push(placeholderMsg);
     await scrollToBottom();
 
@@ -176,6 +186,7 @@ const sendMessage = async () => {
             temperature: temperature.value,
         });
         placeholderMsg.text = data.bot_message;
+        getRequestCount(); // Update request count after sending message
     } catch (err) {
         if (err.response?.status === 429) {
             placeholderMsg.text = "Error: " + (err.response?.data.message);
@@ -188,7 +199,6 @@ const sendMessage = async () => {
     scrollToBottom();
 };
 </script>
-
 <style scoped>
     .message {
         word-wrap: break-word;

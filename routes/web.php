@@ -7,6 +7,7 @@ use App\Http\Controllers\SpeechAudioController;
 use App\Http\Controllers\TranscriptionController;
 use App\Http\Controllers\TranslationController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\UserRequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -65,6 +66,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ChatBotController::class, 'index'])->name('index');
         Route::post('/', [ChatBotController::class, 'store'])->name('store');
     });
+
+    Route::patch('/user/request_count', [UserRequestController::class, 'updateRequestCount'])->name('user.request_count');
+    Route::get('/user/request_count', [UserRequestController::class, 'getRequestCount'])->name('user.get_request_count');
 });
 
 require __DIR__ . '/auth.php';

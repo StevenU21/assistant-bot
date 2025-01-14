@@ -89,11 +89,7 @@
         </div>
 
         <div class="mt-8 flex justify-between">
-            <PrimaryButton
-                type="submit"
-                class="bg-blue-500 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                :disabled="!formData.prompt || !formData.model || !formData.size || !formData.quality || !formData.style"
-            >
+            <PrimaryButton type="submit" class="bg-blue-500 hover:bg-blue-700 text-white">
                 <i class="fas fa-save mr-2"></i> {{ buttonText }}
             </PrimaryButton>
         </div>

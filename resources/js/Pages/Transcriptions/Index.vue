@@ -182,6 +182,7 @@ import Form from "@/Pages/Transcriptions/Form.vue";
 import { Head, router, usePage } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import { ref, onMounted, watch } from "vue";
+import eventBus from "@/Components/eventBus.js"; // Import the event bus
 
 defineProps({
     transcriptions: {
@@ -255,6 +256,7 @@ const submitForm = (formData) => {
         preserveScroll: true,
         onSuccess: () => {
             showModal.value = false;
+            getRequestCount(); // Update request count after form submission
         },
         onError: (error) => {
             if (error.response.status === 429) {
@@ -268,6 +270,15 @@ const submitForm = (formData) => {
             }
         },
     });
+};
+
+const getRequestCount = async () => {
+    try {
+        const response = await axios.get('/user/request_count');
+        eventBus.emit('requestCountUpdated', response.data.request_count); // Emit the event
+    } catch (error) {
+        console.error("Error fetching request count:", error);
+    }
 };
 
 const page = usePage();
