@@ -19,6 +19,24 @@ class OpenAIService
         return $response;
     }
 
+    public function enrichWithMarkdown($text, $context = '')
+    {
+        $prompt = "Take the following text and format it using Markdown:\n\n" .
+            "Text:\n$text\n\n" .
+            ($context ? "Additional context: $context\n\n" : "") .
+            "Instructions:\n- Use headings for relevant titles.\n- Use lists if there are enumerated items.\n- Use bold to highlight important words.\n- Use code blocks if there are technical snippets.\n- If it's a song lyric, format verses, paragraphs, separate the text into introduction, verses, chorus, bridge, and ending.\n- Adapt the formatting depending on whether it's a story, narration, dictation, etc.\n\nReturn only the text in Markdown.";
+
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are an assistant that formats text in Markdown.'],
+                ['role' => 'user', 'content' => $prompt],
+            ],
+        ]);
+
+        return $response['choices'][0]['message']['content'];
+    }
+
     public function translate($text, $sourceLanguage, $targetLanguage)
     {
         $messages = [
