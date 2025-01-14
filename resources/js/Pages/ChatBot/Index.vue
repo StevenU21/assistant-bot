@@ -16,33 +16,27 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Model
                         </label>
-                        <select v-model="selectedModel" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
-                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                            <option value="gpt-4o-mini">GPT-4o-mini</option>
-                            <option value="gpt-4o">GPT-4o</option>
+                        <select v-model="selectedModel" :disabled="isGenerating" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
+                            <option v-for="model in modelOptions" :key="model.value" :value="model.value">
+                                {{ model.text }}
+                            </option>
                         </select>
                     </div>
                     <div class="flex-1">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Temperature
                         </label>
-                        <input type="number" step="0.1" min="0" max="1.5" v-model="temperature" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"/>
+                        <input type="number" step="0.1" min="0" max="1.5" v-model="temperature" :disabled="isGenerating" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600"/>
                     </div>
                     <!-- Prompt as Select -->
                     <div class="flex-1">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                             Prompt
                         </label>
-                        <select v-model="prompt" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
-                            <option value="assistant">Assistant</option>
-                            <option value="grammar_correction">Grammar Correction</option>
-                            <option value="sarcastic_response">Sarcastic</option>
-                            <option value="code_explainer">Code Explainer</option>
-                            <option value="simplify_text">Simplify Text</option>
-                            <option value="code_interviewer">Code Interviewer</option>
-                            <option value="improve_code_efficiency">Improve Code</option>
-                            <option value="translator">Translation</option>
-                            <option value="psychologist">Psychologist</option>
+                        <select v-model="prompt" @change="sendPrompt" :disabled="isGenerating" class="mt-1 w-full p-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 border-gray-300 dark:border-gray-600">
+                            <option v-for="option in promptOptions" :key="option.value" :value="option.value">
+                                {{ option.text }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -95,7 +89,9 @@
                         Send
                     </button>
                     <button @click="clearChat"
-                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none">
+                            :disabled="isGenerating"
+                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none
+                                disabled:opacity-50 disabled:cursor-not-allowed">
                         Clear Chat
                     </button>
                 </div>
@@ -117,7 +113,7 @@ function renderMarkdown(text) {
     return marked(text || '');
 }
 
-const selectedModel = ref("gpt-4o-mini");
+const selectedModel = ref("gpt-3.5-turbo");
 const temperature = ref(0.5);
 const prompt = ref("assistant");
 const userInput = ref("");
@@ -127,14 +123,40 @@ const chatContainer = ref(null);
 
 const errorMessage = ref("");
 
+const modelOptions = [
+    { value: "gpt-3.5-turbo", text: "GPT-3.5 Turbo" },
+    { value: "gpt-4o-mini", text: "GPT-4o-mini" },
+    { value: "gpt-4o", text: "GPT-4o" },
+];
+
 const initialPrompts = [
     { title: "Explicación de código PHP", text: "Explica cómo hacer una función recursiva en PHP." },
-    { title: "Resumen de 'Cien años de soledad'", text: "Haz un resumen de 'Cien años de soledad' destacando los puntos importantes." },
+    { title: "Resumen de 'Cien años de soledad'", text: "Haz un resumen detallado de 'Cien años de soledad' destacando los puntos importantes, personajes, trama, giros argumentales, analogias." },
     { title: "Plan para una salida divertida", text: "Proporciona un plan para una salida divertida con amigos." },
-    { title: "Consejos para mejorar hábitos", text: "Dame consejos para mejorar mis hábitos." },
+    { title: "Consejos para mejorar hábitos", text: "Dame consejos solidos para mejorar mis hábitos." },
     { title: "Analisis de Mushoku Tensei", text: "Has un resumen de la obra japonesa Mushoku Tensei, destacando punto importante, el protagonista, los simbolismos y los personajes"},
     { title: "Guia de Estudio para Laravel", text: "Dame una guia de estudio completa paso a paso para aprender el framework laravel, desde lo mas basico hasta lo mas avanzado, con el fin de tenes los conocimientos necesarios para un entorno laboral" },
 ];
+
+const promptOptions = [
+    { value: "assistant", text: "Assistant" },
+    { value: "grammar_correction", text: "Grammar Correction" },
+    { value: "sarcastic_response", text: "Sarcastic" },
+    { value: "code_explainer", text: "Code Explainer" },
+    { value: "simplify_text", text: "Simplify Text" },
+    { value: "code_interviewer", text: "Code Interviewer" },
+    { value: "improve_code_efficiency", text: "Improve Code" },
+    { value: "translator", text: "Translation" },
+    { value: "psychologist", text: "Psychologist" },
+];
+
+const sendPrompt = async () => {
+    const selectedPrompt = initialPrompts.find(p => p.title.toLowerCase().replace(/\s+/g, '_') === prompt.value);
+    if (selectedPrompt) {
+        userInput.value = selectedPrompt.text;
+        await sendMessage();
+    }
+};
 
 const scrollToBottom = async () => {
     await nextTick();
