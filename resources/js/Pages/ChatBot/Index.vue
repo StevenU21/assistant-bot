@@ -68,7 +68,7 @@
                         </div>
                         <div
                             v-else
-                            :class="[ 'message', 'bg-blue-500 text-white' ]"
+                            :class="[ 'message', 'bg-indigo-600 hover:bg-indigo-700 text-white' ]"
                             class="p-3 rounded-md max-w-lg md:max-w-xl">
                             {{ msg.text }}
                         </div>
