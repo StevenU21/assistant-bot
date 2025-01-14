@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Redirect;
 
 class RequestLimitExceededException extends Exception
 {
@@ -12,11 +13,21 @@ class RequestLimitExceededException extends Exception
         parent::__construct($message, $code);
     }
 
-    public function render()
+    public function render($request)
     {
-        return redirect()->back()->with([
-            'message' => $this->getMessage(),
-            'status' => 'error'
-        ]);
+        if ($request->header('X-Inertia')) {
+            return Redirect::back()->with([
+                'message' => $this->getMessage(),
+                'status' => 'error'
+            ]);
+        }
+
+        // Verificar si la solicitud es una llamada AJAX normal
+        if ($request->wantsJson() || $request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'message' => $this->getMessage(),
+                'status' => 'error'
+            ], $this->getCode());
+        }
     }
 }

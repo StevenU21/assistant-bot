@@ -287,7 +287,7 @@ const updateSpeechAudios = () => {
 
 // Watch for session messages and display them using SweetAlert
 watch(() => page.props.flash, (flash) => {
-    if (flash && flash.message) {
+    if (flash?.message) {
         Swal.fire("Error!", flash.message, "error");
     }
 });

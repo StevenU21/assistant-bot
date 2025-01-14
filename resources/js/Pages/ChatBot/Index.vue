@@ -64,19 +64,13 @@
                         >
                         <div
                             v-if="msg.sender === 'bot'"
-                            v-html="renderMarkdown(msg.text)"
-                            :class="[
-                            'message',
-                            'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-                            ]"
+                            v-html="msg.text ? renderMarkdown(msg.text) : ''"
+                            :class="[ 'message', 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200' ]"
                             class="p-3 rounded-md max-w-lg md:max-w-xl"
                         />
                         <div
                             v-else
-                            :class="[
-                            'message',
-                            'bg-blue-500 text-white'
-                            ]"
+                            :class="[ 'message', 'bg-blue-500 text-white' ]"
                             class="p-3 rounded-md max-w-lg md:max-w-xl"
                         >
                             {{ msg.text }}
@@ -116,7 +110,7 @@ import axios from "axios";
 import { marked } from 'marked';
 
 function renderMarkdown(text) {
-    return marked(text);
+    return marked(text || '');
 }
 
 const selectedModel = ref("gpt-3.5-turbo");
@@ -172,7 +166,7 @@ const sendMessage = async () => {
     // Mensaje temporal mientras el bot responde
     const placeholderMsg = { sender: "bot", text: "El bot está escribiendo" };
     messages.value.push(placeholderMsg);
-    await scrollToBottom(); // Scroll after adding bot placeholder
+    await scrollToBottom();
 
     try {
         const { data } = await axios.post("/chatbot", {
@@ -183,8 +177,9 @@ const sendMessage = async () => {
         });
         placeholderMsg.text = data.bot_message;
     } catch (err) {
-        placeholderMsg.text = "Error: " + (err.response?.data.message || "Desconocido");
-        errorMessage.value = err.response?.data.message || "Ocurrió un error.";
+        if (err.response?.status === 429) {
+            placeholderMsg.text = "Error: " + (err.response?.data.message);
+        }
     }
 
     isGenerating.value = false;
