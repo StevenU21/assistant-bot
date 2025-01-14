@@ -88,6 +88,10 @@ onMounted(() => {
                             </div>
                         </div>
 
+                        <div class="block sm:hidden flex-1 flex items-center justify-center">
+                            <RequestCount />
+                        </div>
+
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
                             <RequestCount />
                             <!-- Settings Dropdown -->
@@ -117,7 +121,6 @@ onMounted(() => {
                                 </Dropdown>
                             </div>
                         </div>
-
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
@@ -159,9 +162,6 @@ onMounted(() => {
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="block sm:hidden">
-                    <RequestCount />
                 </div>
                 <!-- Responsive Navigation Menu -->
                 <div
