@@ -44,7 +44,8 @@
                             </tr>
                             <tr v-else v-for="speechAudio in speechAudios.data" :key="speechAudio.id">
                                 <td class="text-white px-4 py-2">
-                                    {{ truncate(speechAudio.text, 34) }}
+                                    <span class="sm:hidden">{{ truncate(speechAudio.text, 34) }}</span>
+                                    <span class="hidden sm:inline">{{ truncate(speechAudio.text, 60) }}</span>
                                 </td>
                                 <td class="text-white px-4 py-2 hidden sm:table-cell">
                                     {{ format(new Date(speechAudio.created_at),"dd/MM/yyyy HH:mm:ss") }}
@@ -54,11 +55,11 @@
                                         <AudioPlayer :audioUrl="speechAudio.audioUrl" v-model:isPlaying="speechAudio.isPlaying"/>
                                         <DropdownMenu>
                                             <PrimaryButton @click="downloadText(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
-                                                <i class="fas fa-download mr-1 sm:mr-2"></i>
+                                                <i class="fas fa-file-alt mr-1 sm:mr-2"></i>
                                                 <span class="hidden sm:inline">Download TXT</span>
                                             </PrimaryButton>
                                             <PrimaryButton @click="downloadSpeechAudio(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
-                                                <i class="fas fa-download mr-1 sm:mr-2"></i>
+                                                <i class="fas fa-file-audio mr-1 sm:mr-2"></i>
                                                 <span class="hidden sm:inline">Download Audio</span>
                                             </PrimaryButton>
                                             <PrimaryButton @click="deleteSpeechAudio(speechAudio.id)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
