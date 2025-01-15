@@ -14,8 +14,8 @@
             <InputError :message="errors.prompt" class="mt-2 text-red-500" />
         </div>
 
-        <div class="flex space-x-4">
-            <div class="w-1/2">
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="w-full sm:w-1/2">
                 <InputLabel for="model" value="Model" class="text-white" />
                 <div class="flex items-center mt-1">
                     <i class="fas fa-robot text-white mr-2"></i>
@@ -32,7 +32,7 @@
                 <InputError :message="errors.model" class="mt-2 text-red-500" />
             </div>
 
-            <div class="w-1/2">
+            <div class="w-full sm:w-1/2">
                 <InputLabel for="size" value="Size" class="text-white" />
                 <div class="flex items-center mt-1">
                     <i class="fas fa-expand-arrows-alt text-white mr-2"></i>
@@ -49,8 +49,8 @@
             </div>
         </div>
 
-        <div class="flex space-x-4">
-            <div class="w-1/2">
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="w-full sm:w-1/2">
                 <InputLabel for="quality" value="Quality" class="text-white" />
                 <div class="flex items-center mt-1">
                     <i class="fas fa-highlighter text-white mr-2"></i>
@@ -67,7 +67,7 @@
                 <InputError :message="errors.quality" class="mt-2 text-red-500" />
             </div>
 
-            <div class="w-1/2">
+            <div class="w-full sm:w-1/2">
                 <InputLabel for="style" value="Style" class="text-white" />
                 <div class="flex items-center mt-1">
                     <i class="fas fa-palette text-white mr-2"></i>
