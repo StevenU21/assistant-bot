@@ -44,7 +44,7 @@
                             </tr>
                             <tr v-else v-for="speechAudio in speechAudios.data" :key="speechAudio.id">
                                 <td class="text-white px-4 py-2">
-                                    <span class="sm:hidden">{{ truncate(speechAudio.text, 34) }}</span>
+                                    <span class="sm:hidden">{{ truncate(speechAudio.text, 24) }}</span>
                                     <span class="hidden sm:inline">{{ truncate(speechAudio.text, 60) }}</span>
                                 </td>
                                 <td class="text-white px-4 py-2 hidden sm:table-cell">

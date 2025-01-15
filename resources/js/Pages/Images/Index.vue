@@ -19,57 +19,65 @@
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                        <table class="w-full min-w-max">
-                            <thead>
-                                <tr>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-image mr-2"></i>Prompt
-                                    </th>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-calendar-alt mr-2"></i>Generated At
-                                    </th>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-expand mr-2"></i>Image
-                                    </th>
-                                    <th class="text-white p-4">
-                                        <i class="fas fa-cogs mr-2"></i>Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-if="!images || !images.data || images.data.length === 0">
-                                    <td colspan="5" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
-                                        No images found.
-                                    </td>
-                                </tr>
-                                <tr v-else v-for="image in images.data" :key="image.id">
-                                    <td class="text-white px-4 py-2">
-                                        {{ truncate(image.prompt, 40) }}
-                                    </td>
-                                    <td class="text-white px-4 py-2">
-                                        {{ format(new Date(image.created_at), 'dd/MM/yyyy HH:mm:ss') }}
-                                    </td>
-                                    <td class="text-white px-4 py-2">
-                                        <img :src="image.imageUrl" alt="Generated Image" class="w-32 h-32 object-cover rounded-md" />
-                                    </td>
-                                    <td class="text-white px-4 py-2 space-x-2 text-center">
-                                        <div class="flex space-x-2 justify-center">
-                                            <PrimaryButton @click="openImageModal(image)" class="bg-blue-500 hover:bg-blue-700 text-white text-left">
-                                                <i class="fas fa-eye mr-2"></i> View
+                    <table class="w-full min-w-max">
+                        <thead>
+                            <tr>
+                                <th class="text-white p-4 text-left">
+                                    <i class="fas fa-image mr-2"></i>
+                                    <span class="hidden sm:inline">Prompt</span>
+                                </th>
+                                <th class="text-white p-4 text-left hidden sm:table-cell">
+                                    <i class="fas fa-calendar-alt mr-2"></i>
+                                    <span class="hidden sm:inline">Generated At</span>
+                                </th>
+                                <th class="text-white p-4 text-left">
+                                    <i class="fas fa-expand mr-2"></i>
+                                    <span class="hidden sm:inline">Image</span>
+                                </th>
+                                <th class="text-white p-4">
+                                    <i class="fas fa-cogs mr-2"></i>
+                                    <span class="hidden sm:inline">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="!images || !images.data || images.data.length === 0">
+                                <td colspan="5" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
+                                    No images found.
+                                </td>
+                            </tr>
+                            <tr v-else v-for="image in images.data" :key="image.id">
+                                <td class="text-white px-4 py-2">
+                                    <span class="sm:hidden">{{ truncate(image.prompt, 8) }}</span>
+                                    <span class="hidden sm:inline">{{ truncate(image.prompt, 40) }}</span>
+                                </td>
+                                <td class="text-white px-4 py-2 hidden sm:table-cell">
+                                    {{ format(new Date(image.created_at), 'dd/MM/yyyy HH:mm:ss') }}
+                                </td>
+                                <td class="text-white px-4 py-2">
+                                    <img :src="image.imageUrl" alt="Generated Image" class="w-16 h-16 sm:w-32 sm:h-32 object-cover rounded-md" />
+                                </td>
+                                <td class="text-white px-4 py-2 space-x-2 text-center">
+                                    <div class="flex space-x-1 justify-center">
+                                        <PrimaryButton @click="openImageModal(image)" class="bg-blue-500 hover:bg-blue-700 text-white text-left px-2 py-1 text-xs sm:text-sm">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            <span class="hidden sm:inline">View</span>
+                                        </PrimaryButton>
+                                        <DropdownMenu>
+                                            <PrimaryButton @click="downloadImage(image.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                <i class="fas fa-download mr-1"></i>
+                                                <span class="hidden sm:inline">Download</span>
                                             </PrimaryButton>
-                                            <DropdownMenu>
-                                                <PrimaryButton @click="downloadImage(image.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
-                                                    <i class="fas fa-download mr-2"></i> Download
-                                                </PrimaryButton>
-                                                <PrimaryButton @click="deleteImage(image.id)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left">
-                                                    <i class="fas fa-trash mr-2"></i> Delete
-                                                </PrimaryButton>
-                                            </DropdownMenu>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            <PrimaryButton @click="deleteImage(image.id)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                <i class="fas fa-trash mr-1"></i>
+                                                <span class="hidden sm:inline">Delete</span>
+                                            </PrimaryButton>
+                                        </DropdownMenu>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="flex justify-left mb-6 mt-6">
