@@ -19,66 +19,58 @@
                 </div>
 
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                        <table class="w-full min-w-max">
-                            <thead>
-                                <tr>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-font mr-2"></i>ID
-                                    </th>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-align-left mr-2"></i
-                                        >Text
-                                    </th>
-                                    <th class="text-white p-4 text-left">
-                                        <i class="fas fa-calendar-alt mr-2"></i
-                                        >Recorded At
-                                    </th>
-                                    <th class="text-white p-4">
-                                        <i class="fas fa-cogs mr-2"></i>Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-if="!speechAudios || !speechAudios.data || speechAudios.data.length === 0">
-                                    <td colspan="5" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
-                                        No speech audios found.
-                                    </td>
-                                </tr>
-                                <tr v-else v-for="speechAudio in speechAudios.data" :key="speechAudio.id">
-                                    <td class="text-white px-4 py-2">
-                                        {{ speechAudio.id }}
-                                    </td>
-
-                                    <td class="text-white px-4 py-2">
-                                        {{ truncate(speechAudio.text, 60) }}
-                                    </td>
-
-                                    <td class="text-white px-4 py-2">
-                                        {{ format(new Date(speechAudio.created_at),"dd/MM/yyyy HH:mm:ss") }}
-                                    </td>
-
-                                    <td class="text-white px-4 py-2 space-x-2 text-center">
-                                        <div class="flex space-x-2 justify-center">
-                                            <AudioPlayer :audioUrl="speechAudio.audioUrl" v-model:isPlaying=" speechAudio.isPlaying"/>
-                                            <DropdownMenu>
-                                                <PrimaryButton @click="downloadText(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
-                                                    <i class="fas fa-download mr-2"></i>
-                                                    Download Text
-                                                </PrimaryButton>
-                                                <PrimaryButton @click="downloadSpeechAudio(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left">
-                                                    <i class="fas fa-download mr-2"></i>
-                                                    Download Audio
-                                                </PrimaryButton>
-                                                <PrimaryButton @click="deleteSpeechAudio(speechAudio.id)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left">
-                                                    <i class="fas fa-trash mr-2"></i>
-                                                    Delete
-                                                </PrimaryButton>
-                                            </DropdownMenu>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <table class="w-full min-w-max">
+                        <thead>
+                            <tr>
+                                <th class="text-white p-4 text-left">
+                                    <i class="fas fa-align-left mr-2"></i>
+                                    <span class="hidden sm:inline">Text</span>
+                                </th>
+                                <th class="text-white p-4 text-left hidden sm:table-cell">
+                                    <i class="fas fa-calendar-alt mr-2"></i>
+                                    <span class="hidden sm:inline">Recorded At</span>
+                                </th>
+                                <th class="text-white p-4">
+                                    <i class="fas fa-cogs mr-2"></i>
+                                    <span class="hidden sm:inline">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="!speechAudios || !speechAudios.data || speechAudios.data.length === 0">
+                                <td colspan="4" class="text-white px-4 py-8 text-center bg-gray-700 rounded-lg">
+                                    No speech audios found.
+                                </td>
+                            </tr>
+                            <tr v-else v-for="speechAudio in speechAudios.data" :key="speechAudio.id">
+                                <td class="text-white px-4 py-2">
+                                    {{ truncate(speechAudio.text, 34) }}
+                                </td>
+                                <td class="text-white px-4 py-2 hidden sm:table-cell">
+                                    {{ format(new Date(speechAudio.created_at),"dd/MM/yyyy HH:mm:ss") }}
+                                </td>
+                                <td class="text-white px-2 py-2 space-x-2 text-center">
+                                    <div class="flex space-x-1 justify-center">
+                                        <AudioPlayer :audioUrl="speechAudio.audioUrl" v-model:isPlaying="speechAudio.isPlaying"/>
+                                        <DropdownMenu>
+                                            <PrimaryButton @click="downloadText(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                <i class="fas fa-download mr-1 sm:mr-2"></i>
+                                                <span class="hidden sm:inline">Download TXT</span>
+                                            </PrimaryButton>
+                                            <PrimaryButton @click="downloadSpeechAudio(speechAudio.id)" class="bg-green-500 hover:bg-green-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                <i class="fas fa-download mr-1 sm:mr-2"></i>
+                                                <span class="hidden sm:inline">Download Audio</span>
+                                            </PrimaryButton>
+                                            <PrimaryButton @click="deleteSpeechAudio(speechAudio.id)" class="bg-red-500 hover:bg-red-700 text-white w-full text-left px-2 py-1 text-xs sm:text-sm">
+                                                <i class="fas fa-trash mr-1 sm:mr-2"></i>
+                                                <span class="hidden sm:inline">Delete</span>
+                                            </PrimaryButton>
+                                        </DropdownMenu>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="flex justify-left mb-6 mt-6">
@@ -91,7 +83,6 @@
         <Modal :show="showModal" @close="showModal = false">
             <Form :submitAction="submitForm" buttonText="Generate Speech Audio" :errors="errors"/>
         </Modal>
-
     </AuthenticatedLayout>
 </template>
 
