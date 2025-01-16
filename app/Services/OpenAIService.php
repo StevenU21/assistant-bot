@@ -102,12 +102,13 @@ class OpenAIService
         $prompt = "Take the following text and format it using Markdown:\n\n" .
             "Text:\n$text\n\n" .
             ($context ? "Additional context: $context\n\n" : "") .
-            "Instructions:\n- Use headings for relevant titles.\n- Use lists if there are enumerated items.\n- Use bold to highlight important words.\n- Use code blocks if there are technical snippets.\n- If it's a song lyric, format verses, paragraphs, separate the text into introduction, verses, chorus, bridge, and ending.\n- Adapt the formatting depending on whether it's a story, narration, dictation, etc.\n\nReturn only the text in Markdown.";
+            "Instructions:\n- Use headings for relevant titles.\n- Use lists if there are enumerated items.\n- Use bold to highlight important words.\n- Use code blocks if there are technical snippets.\n- If it's a song lyric, format verses, paragraphs, separate the text into introduction, verses, chorus, bridge, and ending.\n- Adapt the formatting depending on whether it's a story, narration, dictation, etc.\n- At the end of the text, add an extra section for analysis, reflections, and context.\n\n" .
+            "After formatting the text in Markdown, provide a detailed analysis of the text. The analysis should include:\n- Summary of the main points.\n- Interpretation of the text's meaning.\n- Any notable stylistic elements.\n- Contextual information that enhances understanding.\n\nReturn only the text in Markdown followed by the analysis.";
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-4o-mini',
             'messages' => [
-                ['role' => 'system', 'content' => 'You are an assistant that formats text in Markdown.'],
+                ['role' => 'system', 'content' => 'You are an assistant that formats text in Markdown and provides detailed analysis.'],
                 ['role' => 'user', 'content' => $prompt],
             ],
         ]);
@@ -120,7 +121,7 @@ class OpenAIService
         $response = OpenAI::chat()->create([
             'model' => 'gpt-3.5-turbo',
             'messages' => [
-                ['role' => 'system', 'content' => 'Eres un asistente que lee nombre del archivo de audio y dependiendo del contexto si el archivo de audio ya tiene nombre lo que vas hacer es simplificar el nombre y evitar un formato cargado solo texto natural, ademas si el archivo de audio no tiene un nombre como tal usa la info del content para segun el contexto poner el nombre, como por ejemplo Saludo, Historia de Terror de tal cosa, no maximo a 40 caracteres, no pongas archivos de audio o cosas asi porque ya se sabe es un audio'],
+                ['role' => 'system', 'content' => 'You are an assistant that reads the audio file name and, depending on the context, simplifies it to natural text. If the audio file has no name, use the context to generate a name, e.g., Greeting, Horror Story, etc., with a maximum of 40 characters. Avoid generic texts like "audio file". Format the name as "Name - Author (if mentioned) - Something about the song".'],
                 ['role' => 'user', 'content' => $filename . ' - ' . $context],
             ],
         ]);
