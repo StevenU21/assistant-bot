@@ -37,43 +37,46 @@ class ProcessTranscription implements ShouldQueue
     /**
      * Execute the job.
      */
-       public function handle(OpenAIService $openAIService)
-        {
-            // Get user name and create slug
-            $user = User::find($this->userId);
-            $userNameSlug = Str::slug($user->name . '-' . $user->id, '-');
+    public function handle(OpenAIService $openAIService)
+    {
+        // Get user name and create slug
+        $user = User::find($this->userId);
+        $userNameSlug = Str::slug($user->name . '-' . $user->id, '-');
 
-            // Create user-specific directory
-            $userDirectory = $userNameSlug . '/transcriptions';
-            if (!Storage::disk('public')->exists($userDirectory)) {
-                Storage::disk('public')->makeDirectory($userDirectory);
-            }
-
-            // Move audio file to user-specific directory
-            $userAudioPath = $userDirectory . '/' . basename($this->filePath);
-            Storage::disk('public')->move($this->filePath, $userAudioPath);
-
-            // Process the transcription
-            $response = $openAIService->transcribe(Storage::disk('public')->path($userAudioPath), $this->language);
-
-            // Format the transcribed text using Markdown
-            $formattedText = $openAIService->enrichWithMarkdown($response['text']);
-
-            // Save transcription file to user-specific directory
-            $transcriptionPath = $userDirectory . '/' . uniqid() . '.txt';
-            Storage::disk('public')->put($transcriptionPath, $formattedText);
-
-            // Save to the database
-            Transcription::create([
-                'title' => $this->fileName,
-                'content' => $formattedText,
-                'language' => $this->language ?? $response['language'],
-                'audio' => $userAudioPath, // Save the relative path of the audio
-                'slug' => Str::slug(pathinfo($this->fileName, PATHINFO_FILENAME) . '-' . time()),
-                'user_id' => $this->userId
-            ]);
-
-            // Dispatch event for transcription completion
-            event(new ProcessStatusCompleted($this->userId, 'Transcription completed'));
+        // Create user-specific directory
+        $userDirectory = $userNameSlug . '/transcriptions';
+        if (!Storage::disk('public')->exists($userDirectory)) {
+            Storage::disk('public')->makeDirectory($userDirectory);
         }
+
+        // Move audio file to user-specific directory
+        $userAudioPath = $userDirectory . '/' . basename($this->filePath);
+        Storage::disk('public')->move($this->filePath, $userAudioPath);
+
+        // Process the transcription
+        $response = $openAIService->transcribe(Storage::disk('public')->path($userAudioPath), $this->language);
+
+        // Format the transcribed text using Markdown
+        $formattedText = $openAIService->enrichWithMarkdown($response['text']);
+
+        // Refactor the file name
+        $newFileName = $openAIService->refactorName($this->fileName, $formattedText);
+
+        // Save transcription file to user-specific directory
+        $transcriptionPath = $userDirectory . '/' . Str::slug($newFileName) . '.txt';
+        Storage::disk('public')->put($transcriptionPath, $formattedText);
+
+        // Save to the database
+        Transcription::create([
+            'title' => $newFileName,
+            'content' => $formattedText,
+            'language' => $this->language ?? $response['language'],
+            'audio' => $userAudioPath, // Save the relative path of the audio
+            'slug' => Str::slug($newFileName . '-' . time()),
+            'user_id' => $this->userId
+        ]);
+
+        // Dispatch event for transcription completion
+        event(new ProcessStatusCompleted($this->userId, 'Transcription completed'));
+    }
 }

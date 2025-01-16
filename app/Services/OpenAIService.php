@@ -115,6 +115,19 @@ class OpenAIService
         return $response['choices'][0]['message']['content'];
     }
 
+    public function refactorName($filename, $context = '')
+    {
+        $response = OpenAI::chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'Eres un asistente que lee nombre del archivo de audio y dependiendo del contexto si el archivo de audio ya tiene nombre lo que vas hacer es simplificar el nombre y evitar un formato cargado solo texto natural, ademas si el archivo de audio no tiene un nombre como tal usa la info del content para segun el contexto poner el nombre, como por ejemplo Saludo, Historia de Terror de tal cosa, no maximo a 40 caracteres, no pongas archivos de audio o cosas asi porque ya se sabe es un audio'],
+                ['role' => 'user', 'content' => $filename . ' - ' . $context],
+            ],
+        ]);
+
+        return $response['choices'][0]['message']['content'];
+    }
+
     private function getPromptDescription($prompt)
     {
         $globalInstruction = 'Use Markdown format whenever appropriate to enrich your responses. Add separation lines, titles, spacing, and any elements that help make the content look clean and professional. Avoid separating paragraphs too much. If presenting code, use Markdown blocks to highlight it from the rest of the text.';

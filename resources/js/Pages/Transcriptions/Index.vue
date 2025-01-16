@@ -50,7 +50,8 @@
                             </tr>
                             <tr v-else v-for="transcription in transcriptions.data" :key="transcription.id">
                                 <td class="text-white px-4 py-2">
-                                    {{ truncate(transcription.title, 12) }}
+                                    <span class="hidden md:inline">{{ truncate(transcription.title, 40) }}</span>
+                                    <span class="inline md:hidden">{{ truncate(transcription.title, 14) }}</span>
                                 </td>
                                 <td class="text-white px-4 py-2 hidden sm:table-cell">
                                     {{ truncate(transcription.content, 30) }}
