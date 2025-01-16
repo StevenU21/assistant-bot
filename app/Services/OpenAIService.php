@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Http;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Audio\TranscriptionResponse;
 use OpenAI\Responses\Models\ListResponse;
@@ -138,5 +139,19 @@ class OpenAIService
         $response = OpenAI::models()->list();
 
         return $response;
+    }
+
+    public function getPromptList(): array
+    {
+        $response = Http::get('https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv');
+
+        if ($response->successful()) {
+            $csvData = $response->body();
+            $lines = explode(PHP_EOL, $csvData);
+            $prompts = array_map('str_getcsv', $lines);
+            return $prompts;
+        }
+
+        return [];
     }
 }
