@@ -97,18 +97,6 @@ class OpenAIService
         ];
     }
 
-    private function sendChatRequest(string $model,array $messages,float $temperature = 0.7, int $maxTokens = 256) {
-
-        $response = OpenAI::chat()->create([
-            'model' => $model,
-            'messages' => $messages,
-            'temperature' => $temperature,
-            'max_tokens' => $maxTokens,
-        ]);
-
-        return $response;
-    }
-
     public function enrichWithMarkdown($text, $context = '')
     {
         $prompt = "Take the following text and format it using Markdown:\n\n" .
