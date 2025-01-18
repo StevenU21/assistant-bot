@@ -35,15 +35,15 @@ class ImageController extends Controller
     {
         $this->authorize('makeRequest', auth()->user());
 
-        $model = $request->validated()['model'];
-        $quality = $request->validated()['quality'];
         $prompt = $request->validated()['prompt'];
         $style = $request->validated()['style'];
         $size = $request->validated()['size'];
+        $model = $request->validated()['model'];
+        $quality = $request->validated()['quality'];
 
         event(new ProcessStatusStarted(auth()->id(), 'Generating image'));
         // Dispatch job
-        ProcessImage::dispatch($model, $prompt, $style, $size, $quality, auth()->id());
+        ProcessImage::dispatch($prompt, $style, $size, $model, $quality, auth()->id());
 
         return redirect()->route('images.index');
     }

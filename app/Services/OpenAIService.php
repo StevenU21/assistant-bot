@@ -49,7 +49,7 @@ class OpenAIService
         return $response;
     }
 
-    public function textToImage($model = 'dall-e-2', $prompt, $style, $size, $quality = 'standard')
+    public function textToImage($prompt, $style, $size, $model = 'dall-e-2', $quality = 'standard')
     {
         $styleDescriptions = [
             'realistic' => 'with photorealistic details and natural lighting',
@@ -77,7 +77,7 @@ class OpenAIService
         ];
     }
 
-    public function conversation($text, $model, $prompt = 'assistant', $temperature)
+    public function conversation($text, $model, $temperature, $prompt = 'assistant')
     {
         $messages = [
             ['role' => 'system', 'content' => $this->getPromptDescription($prompt)],

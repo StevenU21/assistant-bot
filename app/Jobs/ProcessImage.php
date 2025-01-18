@@ -15,22 +15,22 @@ use Illuminate\Support\Str;
 class ProcessImage implements ShouldQueue
 {
     use Queueable;
-    protected $model;
     protected $prompt;
     protected $style;
     protected $size;
+    protected $model;
     protected $quality;
     protected $userId;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($model,$prompt, $style, $size, $quality, $userId)
+    public function __construct($prompt, $style, $size, $model, $quality, $userId)
     {
-        $this->model = $model;
         $this->prompt = $prompt;
         $this->style = $style;
         $this->size = $size;
+        $this->model = $model;
         $this->quality = $quality;
         $this->userId = $userId;
     }
@@ -41,7 +41,7 @@ class ProcessImage implements ShouldQueue
     public function handle(OpenAIService $openAIService)
     {
         // Generate image using OpenAIService
-        $response = $openAIService->textToImage($this->model, $this->prompt, $this->style, $this->size, $this->quality);
+        $response = $openAIService->textToImage($this->prompt, $this->style, $this->size,$this->model, $this->quality);
 
         // Extract URL and enhanced prompt from response
         $imageUrl = $response['url'];

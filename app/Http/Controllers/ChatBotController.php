@@ -28,13 +28,13 @@ class ChatBotController extends Controller
     public function store(ChatBotRequest $request)
     {
         $this->authorize('makeRequest', auth()->user());
-        
+
         $text = $request->validated()['text'];
         $model = $request->validated()['model'];
-        $prompt = $request->validated()['prompt'];
         $temperature = $request->validated()['temperature'];
+        $prompt = $request->validated()['prompt'];
 
-        $response = $this->OpenAIService->conversation($text, $model, $prompt, $temperature);
+        $response = $this->OpenAIService->conversation($text, $model, $temperature, $prompt);
 
         return response()->json([
             'bot_message' => $response['bot_message'],
