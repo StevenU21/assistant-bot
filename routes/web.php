@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SpeechAudioController;
